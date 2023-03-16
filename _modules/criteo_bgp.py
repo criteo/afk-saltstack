@@ -1,5 +1,4 @@
-"""
-Agnostic BGP module to retrieve information.
+"""Agnostic BGP module to retrieve information.
 
 :codeauthor: Criteo Network team
 :maturity:   new

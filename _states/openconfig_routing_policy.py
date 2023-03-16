@@ -1,5 +1,4 @@
-"""
-Module to maintain openconfig:routing-policy.
+"""Module to maintain openconfig:routing-policy.
 
 :codeauthor: Criteo Network team
 :maturity:   new

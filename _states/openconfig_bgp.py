@@ -1,5 +1,4 @@
-"""
-Module to maintain openconfig:bgp.
+"""Module to maintain openconfig:bgp.
 
 :codeauthor: Criteo Network team
 :maturity:   new

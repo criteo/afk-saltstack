@@ -1,5 +1,4 @@
-"""
-Detect a change in FRR config for specific objects.
+"""Detect a change in FRR config for specific objects.
 
 Supported:
 - route-maps

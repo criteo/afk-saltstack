@@ -45,6 +45,7 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+.benchmarks
 
 # Translations
 *.mo
@@ -117,3 +118,4 @@ coverage-*/
 .pytest_cache/
 *.ignore
 junit-unittest.xml
+docs/ref/

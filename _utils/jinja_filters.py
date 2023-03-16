@@ -1,9 +1,9 @@
-"""
-Custom Jinja filters for OpenConfig templates.
+"""Custom Jinja filters for OpenConfig templates.
 
 :codeauthor: Criteo Network team
 :maturity:   new
 """
+
 
 def format_route_policy_name(route_policy_name, afisafi):
     """Format route policy name.
