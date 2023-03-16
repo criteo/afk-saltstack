@@ -1,0 +1,106 @@
+{
+    "bgp": {
+        "neighbors": {
+            "neighbor": [
+                {
+                    "neighbor-address": "192.0.2.1",
+                    "config": {
+                        "peer-group": "",
+                        "neighbor-address": "192.0.2.1",
+                        "enabled": true,
+                        "peer-as": 65001,
+                        "local-as": 65501,
+                        "auth-password": "",
+                        "description": "to:tor1.dc6"
+                    },
+                    "apply-policy": {
+                        "config": {
+                            "import-policy": ["RM-LAN-IN"],
+                            "default-import-policy": null,
+                            "export-policy": ["RM-LAN-OUT"],
+                            "default-export-policy": null
+                        }
+                    },
+                    "afi-safis": {
+                        "afi-safi": [
+                            {
+                                "afi-safi-name": "IPV4_UNICAST",
+                                "ipv4-unicast": {
+                                    "config": {
+                                        "send-default-route": false
+                                    },
+                                    "prefix-limit": {
+                                        "config": {
+                                            "max-prefixes": 1000,
+                                            "prevent-teardown": null,
+                                            "warning-threshold-pct": null,
+                                            "restart-timer": null
+                                        }
+                                    }
+                                },
+                                "ipv6-unicast": null,
+                                "config": {
+                                    "afi-safi-name": "IPV4_UNICAST",
+                                    "enabled": true
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "neighbor-address": "192.0.2.2",
+                    "config": {
+                        "peer-group": "",
+                        "neighbor-address": "192.0.2.2",
+                        "enabled": true,
+                        "peer-as": 65002,
+                        "local-as": 65501,
+                        "auth-password": "",
+                        "description": "to:tor2.dc6"
+                    },
+                    "apply-policy": {
+                        "config": {
+                            "import-policy": ["RM-LAN-IN"],
+                            "default-import-policy": null,
+                            "export-policy": ["RM-LAN-OUT"],
+                            "default-export-policy": null
+                        }
+                    },
+                    "afi-safis": {
+                        "afi-safi": [
+                            {
+                                "afi-safi-name": "IPV4_UNICAST",
+                                "ipv4-unicast": {
+                                    "config": {
+                                        "send-default-route": false
+                                    },
+                                    "prefix-limit": {
+                                        "config": {
+                                            "max-prefixes": 0,
+                                            "prevent-teardown": null,
+                                            "warning-threshold-pct": null,
+                                            "restart-timer": null
+                                        }
+                                    }
+                                },
+                                "ipv6-unicast": null,
+                                "config": {
+                                    "afi-safi-name": "IPV4_UNICAST",
+                                    "enabled": true
+                                },
+                                "apply-policy": {
+                                    "config": {
+                                        "import-policy": ["RM-OVERRIDE-IN"],
+                                        "default-import-policy": null,
+                                        "export-policy": ["RM-OVERRIDE-OUT"],
+                                        "default-export-policy": null
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

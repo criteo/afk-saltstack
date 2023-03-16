@@ -1,0 +1,86 @@
+router bgp 65000
+    !
+    neighbor RA02.01:PG-TOR peer group
+    neighbor RA02.01:PG-TOR local-as 60000
+    neighbor RA02.01:PG-TOR remote-as 60001
+    neighbor RA02.01:PG-TOR description L3_RA
+    neighbor RA02.01:PG-TOR route-map RM-LAN-IN in
+    neighbor RA02.01:PG-TOR route-map RM-LAN-OUT out
+    neighbor RA02.01:PG-TOR maximum-routes 10000
+    neighbor RA02.01:PG-TOR send-community
+    !
+    neighbor 192.0.2.1 remote-as 65001
+    neighbor 192.0.2.1 local-as 65501 no-prepend replace-as
+    default neighbor 192.0.2.1 shutdown
+    neighbor 192.0.2.1 peer-group RA02.01:PG-TOR
+    neighbor 192.0.2.1 description to:tor1.dc6
+    default neighbor 192.0.2.1 password
+    default neighbor 192.0.2.1 route-map in
+    default neighbor 192.0.2.1 route-map out
+    neighbor 192.0.2.1 maximum-routes 1000
+    neighbor 192.0.2.1 send-community
+    !
+    neighbor 192.0.2.2 remote-as 65002
+    neighbor 192.0.2.2 local-as 65501 no-prepend replace-as
+    default neighbor 192.0.2.2 shutdown
+    neighbor 192.0.2.2 peer-group RA02.01:PG-TOR
+    neighbor 192.0.2.2 description to:tor2.dc6
+    default neighbor 192.0.2.2 password
+    neighbor 192.0.2.2 route-map RM-LAN-IN in
+    neighbor 192.0.2.2 route-map RM-LAN-OUT out
+    default neighbor 192.0.2.2 maximum-routes
+    neighbor 192.0.2.2 send-community
+    !
+    neighbor 2001:db8::101 remote-as 65001
+    neighbor 2001:db8::101 local-as 65501 no-prepend replace-as
+    default neighbor 2001:db8::101 shutdown
+    neighbor 2001:db8::101 peer-group RA02.01:PG-TOR
+    neighbor 2001:db8::101 description to:tor1.dc6
+    default neighbor 2001:db8::101 password
+    neighbor 2001:db8::101 route-map RM-LAN-IN in
+    neighbor 2001:db8::101 route-map RM-LAN-OUT out
+    neighbor 2001:db8::101 maximum-routes 1000
+    neighbor 2001:db8::101 send-community
+    !
+    neighbor 2001:db8::102 remote-as 65002
+    neighbor 2001:db8::102 local-as 65501 no-prepend replace-as
+    default neighbor 2001:db8::102 shutdown
+    neighbor 2001:db8::102 peer-group RA02.01:PG-TOR
+    neighbor 2001:db8::102 description to:tor2.dc6
+    default neighbor 2001:db8::102 password
+    neighbor 2001:db8::102 route-map RM-LAN-IN in
+    neighbor 2001:db8::102 route-map RM-LAN-OUT out
+    default neighbor 2001:db8::102 maximum-routes
+    neighbor 2001:db8::102 send-community
+    !
+    address-family ipv4
+        default neighbor RA02.01:PG-TOR route-map in
+        default neighbor RA02.01:PG-TOR route-map out
+        neighbor 192.0.2.1 activate
+        neighbor 192.0.2.1 route-map RM-LAN-IN in
+        neighbor 192.0.2.1 route-map RM-LAN-OUT out
+        neighbor 192.0.2.2 activate
+        default neighbor 192.0.2.2 route-map in
+        default neighbor 192.0.2.2 route-map out
+        no neighbor 2001:db8::101 activate
+        default neighbor 2001:db8::101 route-map in
+        default neighbor 2001:db8::101 route-map out
+        no neighbor 2001:db8::102 activate
+        default neighbor 2001:db8::102 route-map in
+        default neighbor 2001:db8::102 route-map out
+    !
+    address-family ipv6
+        default neighbor RA02.01:PG-TOR route-map in
+        default neighbor RA02.01:PG-TOR route-map out
+        no neighbor 192.0.2.1 activate
+        default neighbor 192.0.2.1 route-map in
+        default neighbor 192.0.2.1 route-map out
+        no neighbor 192.0.2.2 activate
+        default neighbor 192.0.2.2 route-map in
+        default neighbor 192.0.2.2 route-map out
+        neighbor 2001:db8::101 activate
+        default neighbor 2001:db8::101 route-map in
+        default neighbor 2001:db8::101 route-map out
+        neighbor 2001:db8::102 activate
+        default neighbor 2001:db8::102 route-map in
+        default neighbor 2001:db8::102 route-map out

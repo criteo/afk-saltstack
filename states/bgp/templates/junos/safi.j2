@@ -1,0 +1,47 @@
+{% if vrf %}
+{% set vrf_path = "routing-instances " + vrf %}
+{% else %}
+{% set vrf_path = "" %}
+{% endif %}
+
+{# TODO: don't generate SAFI at all for peer-groups #}
+{% if asset_type == "neighbor" %}
+    {% if neighbor["peer_group"] %}
+        {% set path = vrf_path + " protocols bgp group " + neighbor["peer_group"] %}
+    {% else %}
+        {# peer_group is mandatory, so we define a default one if not set #}
+        {% set path = vrf_path + " protocols bgp group AUTOGEN_DEFAULT" %}
+    {% endif %}
+
+    {% set path = path + " neighbor " + neighbor["address"] %}
+{% elif asset_type == "peer-group" %}
+    {% set path = vrf_path + " protocols bgp group " + peer_group["peer-group-name"] %}
+{% endif %}
+
+{% if not safi or safi["config"]["enabled"] == false %}
+delete {{ path }} family {{ safi_name }}
+{% else %}
+set {{ path }} family {{ safi_name }}
+    {% if not safi or not safi.get(safi_key, {}).get("prefix-limit", {}).get("config", {}) %}
+delete {{ path }} family {{ safi_name }} prefix-limit
+    {% elif safi[safi_key]["prefix-limit"]["config"]["max-prefixes"] == 0 %}
+delete {{ path }} family {{ safi_name }} prefix-limit
+    {% elif safi[safi_key]["prefix-limit"]["config"].get("prevent-teardown") %}
+set {{ path }} family {{ safi_name }} prefix-limit maximum {{ safi[safi_key]["prefix-limit"]["config"]["max-prefixes"] }} teardown
+    {% else %}
+set {{ path }} family {{ safi_name }} prefix-limit maximum {{ safi[safi_key]["prefix-limit"]["config"]["max-prefixes"] }}
+    {% endif %}
+{% endif %}
+
+{% for direction in ["import", "export"] %}
+{% set policy = direction ~ "-policy" %}
+    {% if safi and safi.get("apply-policy") and safi["apply-policy"]["config"][policy] %}
+    {% set policies_name_list = [] %}
+        {% for policy_name in safi["apply-policy"]["config"][policy] %}
+        {% set policies_name_list = policies_name_list.append(convert_route_map_name(policy_name, safi["afi-safi-name"])) %}
+        {% endfor %}
+set {{ path }} {{ direction }} [{{ policies_name_list | join(" ") }}]
+    {% elif safi and safi["config"]["enabled"] == true and global_route_map[direction] %}
+set {{ path }} {{ direction }} [{{ global_route_map[direction] | join(" ") }}]
+    {% endif %}
+{% endfor %}

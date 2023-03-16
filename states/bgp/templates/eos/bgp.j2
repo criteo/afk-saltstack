@@ -1,0 +1,24 @@
+router bgp {{ global_as }}
+    {{ global_configuration| indent(width=4, first=False) }}
+{% for peer_group in peer_groups %}
+    !
+    {{ peer_group | indent(width=4, first=False) }}
+{% endfor %}
+
+{% for neighbor in neighbors %}
+    !
+    {{ neighbor | indent(width=4, first=False) }}
+{% endfor %}
+
+{% if neighbors_to_remove %}
+    !
+    {{ neighbors_to_remove | indent(width=4, first=False) }}
+{% endif %}
+
+{% for safi_name, safi in safis.items() %}
+    !
+    address-family {{ safi_name }}
+    {% for safi_config in safi %}
+        {{ safi_config | indent(width=8, first=False) }}
+    {% endfor -%}
+{% endfor -%}

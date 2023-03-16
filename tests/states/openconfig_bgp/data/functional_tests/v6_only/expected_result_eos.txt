@@ -1,0 +1,39 @@
+router bgp 65000
+    !
+    neighbor 2001:db8::101 remote-as 65001
+    neighbor 2001:db8::101 local-as 65501 no-prepend replace-as
+    default neighbor 2001:db8::101 shutdown
+    default neighbor 2001:db8::101 peer-group
+    neighbor 2001:db8::101 description to:tor1.dc6
+    default neighbor 2001:db8::101 password
+    neighbor 2001:db8::101 route-map RM-LAN-IN in
+    neighbor 2001:db8::101 route-map RM-LAN-OUT out
+    neighbor 2001:db8::101 maximum-routes 1000
+    neighbor 2001:db8::101 send-community
+    !
+    neighbor 2001:db8::102 remote-as 65002
+    neighbor 2001:db8::102 local-as 65501 no-prepend replace-as
+    default neighbor 2001:db8::102 shutdown
+    default neighbor 2001:db8::102 peer-group
+    neighbor 2001:db8::102 description to:tor2.dc6
+    default neighbor 2001:db8::102 password
+    neighbor 2001:db8::102 route-map RM-LAN-IN in
+    neighbor 2001:db8::102 route-map RM-LAN-OUT out
+    default neighbor 2001:db8::102 maximum-routes
+    neighbor 2001:db8::102 send-community
+    !
+    address-family ipv4
+        no neighbor 2001:db8::101 activate
+        default neighbor 2001:db8::101 route-map in
+        default neighbor 2001:db8::101 route-map out
+        no neighbor 2001:db8::102 activate
+        default neighbor 2001:db8::102 route-map in
+        default neighbor 2001:db8::102 route-map out
+    !
+    address-family ipv6
+        neighbor 2001:db8::101 activate
+        default neighbor 2001:db8::101 route-map in
+        default neighbor 2001:db8::101 route-map out
+        neighbor 2001:db8::102 activate
+        default neighbor 2001:db8::102 route-map in
+        default neighbor 2001:db8::102 route-map out

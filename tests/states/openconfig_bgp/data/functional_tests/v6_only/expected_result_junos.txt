@@ -1,0 +1,26 @@
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101 peer-as 65001
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101 local-as 65501
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT preference 20
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101 description "to:tor1.dc6"
+delete routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101 authentication-key
+activate routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101
+delete routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101 import
+delete routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101 export
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102 peer-as 65002
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102 local-as 65501
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT preference 20
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102 description "to:tor2.dc6"
+delete routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102 authentication-key
+activate routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102
+delete routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102 import
+delete routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102 export
+delete routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101 family inet unicast
+delete routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102 family inet unicast
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101 family inet6 unicast
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101 family inet6 unicast prefix-limit maximum 1000
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101 import [RM-LAN-IN]
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::101 export [RM-LAN-OUT]
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102 family inet6 unicast
+delete routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102 family inet6 unicast prefix-limit
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102 import [RM-LAN-IN]
+set routing-instances prod protocols bgp group AUTOGEN_DEFAULT neighbor 2001:db8::102 export [RM-LAN-OUT]

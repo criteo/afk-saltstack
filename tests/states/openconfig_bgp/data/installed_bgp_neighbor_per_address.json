@@ -1,0 +1,14 @@
+{
+    "result": {
+        "192.0.2.2": {
+            "remote_as": 65001,
+            "local_as": 65500,
+            "remote_address": "192.0.2.2",
+            "vrf": "default",
+            "export_policy": "RM-LAN-OUT",
+            "import_policy": "RM-LAN-IN",
+            "description": "",
+            "state": "down"
+        }
+    }
+}

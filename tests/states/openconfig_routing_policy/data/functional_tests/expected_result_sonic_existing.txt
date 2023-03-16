@@ -1,0 +1,33 @@
+bgp route-map delay-timer 0
+!
+bgp community-list expanded CL-LOCAL permit 65000:100.
+bgp community-list expanded CL-MAIN permit 649..:20000
+bgp community-list expanded CL-SERVICE permit 65000:5....
+bgp community-list expanded CL-DEFAULT permit 65000:60000
+bgp community-list expanded CL-LOCATION permit 65000:65001
+bgp community-list expanded CL-CLOS_INFRA permit 65000:10100
+no bgp community-list expanded CL-SERVER
+bgp community-list expanded CL-SERVER permit 65000:10200
+!
+no ip prefix-list PF-LOOPBACK_IPV4
+ip prefix-list PF-LOOPBACK_IPV4 seq 10 permit 10.0.0.0/22
+ip prefix-list PF-LOOPBACK_IPV4 seq 20 permit 10.0.1.0/22
+ipv6 prefix-list PF-LOOPBACK_IPV6 seq 10 permit 2001:db8:1::/64
+ipv6 prefix-list PF-LOOPBACK_IPV6 seq 20 permit 2001:db8:1::/128
+!
+no route-map RM-TEST
+!
+route-map RM-TEST deny 10
+  match ip address prefix-list PF-LOOPBACK_IPV4
+  match source-protocol connected
+  set local-preference 1234
+  match community CL-LOCAL
+  set origin egp
+  set local-preference 5678
+  set metric 250
+  set as-path prepend 65000 65000 65000
+  set community 65000:50000
+!
+route-map RM-TEST-OUT deny 10
+!
+no bgp route-map delay-timer

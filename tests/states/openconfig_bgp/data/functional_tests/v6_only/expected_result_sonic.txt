@@ -1,0 +1,41 @@
+router bgp 65000
+    !
+    neighbor 2001:db8::101 remote-as 65001
+    neighbor 2001:db8::101 local-as 65501
+    neighbor 2001:db8::101 description to:tor1.dc6
+    no neighbor 2001:db8::101 password
+    no neighbor 2001:db8::101 shutdown
+    !
+    neighbor 2001:db8::102 remote-as 65002
+    neighbor 2001:db8::102 local-as 65501
+    neighbor 2001:db8::102 description to:tor2.dc6
+    no neighbor 2001:db8::102 password
+    no neighbor 2001:db8::102 shutdown
+    !
+    address-family ipv4 unicast
+        no neighbor 2001:db8::101 route-map * in
+        no neighbor 2001:db8::101 route-map * out
+        no neighbor 2001:db8::101 maximum-prefix
+        no neighbor 2001:db8::101 activate
+        no neighbor 2001:db8::101 soft-reconfiguration inbound
+        no neighbor 2001:db8::101 send-community
+        no neighbor 2001:db8::102 route-map * in
+        no neighbor 2001:db8::102 route-map * out
+        no neighbor 2001:db8::102 maximum-prefix
+        no neighbor 2001:db8::102 activate
+        no neighbor 2001:db8::102 soft-reconfiguration inbound
+        no neighbor 2001:db8::102 send-community
+    !
+    address-family ipv6 unicast
+        neighbor 2001:db8::101 route-map RM-LAN-IN in
+        neighbor 2001:db8::101 route-map RM-LAN-OUT out
+        neighbor 2001:db8::101 maximum-prefix 1000
+        neighbor 2001:db8::101 activate
+        neighbor 2001:db8::101 soft-reconfiguration inbound
+        neighbor 2001:db8::101 send-community
+        neighbor 2001:db8::102 route-map RM-LAN-IN in
+        neighbor 2001:db8::102 route-map RM-LAN-OUT out
+        no neighbor 2001:db8::102 maximum-prefix
+        neighbor 2001:db8::102 activate
+        neighbor 2001:db8::102 soft-reconfiguration inbound
+        neighbor 2001:db8::102 send-community

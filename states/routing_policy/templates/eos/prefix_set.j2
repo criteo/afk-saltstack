@@ -1,0 +1,29 @@
+{% set PROTOCOLS = {
+    "IPV4": "ip",
+    "IPV6": "ipv6",
+}
+%}
+
+{# IPV4 #}
+{% if prefix_set_mode == "IPV4" %}
+{%  for prefix in prefixes %}
+{%   set range = convert_range(prefix["config"]["masklength-range"], prefix["ip-prefix"], false) %}
+{%   if range %}
+{{ PROTOCOLS["IPV4"] }} prefix-list {{ prefix_set_name }} seq {{ loop.index * 10 }} permit {{ prefix["ip-prefix"] }} {{ range }}
+{%   else %}
+{{ PROTOCOLS["IPV4"] }} prefix-list {{ prefix_set_name }} seq {{ loop.index * 10 }} permit {{ prefix["ip-prefix"] }}
+{%   endif %}
+{%  endfor %}
+{% else %}
+
+{# IPV6 #}
+{{ PROTOCOLS["IPV6"] }} prefix-list {{ prefix_set_name }}
+{%  for prefix in prefixes %}
+{%    set range = convert_range(prefix["config"]["masklength-range"], prefix["ip-prefix"], true) %}
+{%   if range %}
+  seq {{ loop.index * 10 }} permit {{ prefix["ip-prefix"] }} {{ range }}
+{%   else %}
+  seq {{ loop.index * 10 }} permit {{ prefix["ip-prefix"] }}
+{%   endif %}
+{%  endfor %}
+{% endif %}

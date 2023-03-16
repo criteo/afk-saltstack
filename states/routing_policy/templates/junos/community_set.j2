@@ -1,0 +1,3 @@
+{% for community_member in community["community-member"] %}
+set policy-options community {{ community["community-set-name"] }} members {{ community_member }}
+{% endfor %}

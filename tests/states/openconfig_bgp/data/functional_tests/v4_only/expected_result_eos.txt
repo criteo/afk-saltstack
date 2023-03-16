@@ -1,0 +1,39 @@
+router bgp 65000
+    !
+    neighbor 192.0.2.1 remote-as 65001
+    neighbor 192.0.2.1 local-as 65501 no-prepend replace-as
+    default neighbor 192.0.2.1 shutdown
+    default neighbor 192.0.2.1 peer-group
+    neighbor 192.0.2.1 description to:tor1.dc6
+    default neighbor 192.0.2.1 password
+    neighbor 192.0.2.1 route-map RM-LAN-IN in
+    neighbor 192.0.2.1 route-map RM-LAN-OUT out
+    neighbor 192.0.2.1 maximum-routes 1000
+    neighbor 192.0.2.1 send-community
+    !
+    neighbor 192.0.2.2 remote-as 65002
+    neighbor 192.0.2.2 local-as 65501 no-prepend replace-as
+    default neighbor 192.0.2.2 shutdown
+    default neighbor 192.0.2.2 peer-group
+    neighbor 192.0.2.2 description to:tor2.dc6
+    default neighbor 192.0.2.2 password
+    neighbor 192.0.2.2 route-map RM-LAN-IN in
+    neighbor 192.0.2.2 route-map RM-LAN-OUT out
+    default neighbor 192.0.2.2 maximum-routes
+    neighbor 192.0.2.2 send-community
+    !
+    address-family ipv4
+        neighbor 192.0.2.1 activate
+        default neighbor 192.0.2.1 route-map in
+        default neighbor 192.0.2.1 route-map out
+        neighbor 192.0.2.2 activate
+        neighbor 192.0.2.2 route-map RM-OVERRIDE-IN in
+        neighbor 192.0.2.2 route-map RM-OVERRIDE-OUT out
+    !
+    address-family ipv6
+        no neighbor 192.0.2.1 activate
+        default neighbor 192.0.2.1 route-map in
+        default neighbor 192.0.2.1 route-map out
+        no neighbor 192.0.2.2 activate
+        default neighbor 192.0.2.2 route-map in
+        default neighbor 192.0.2.2 route-map out

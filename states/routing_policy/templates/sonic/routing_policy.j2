@@ -1,0 +1,16 @@
+{# prevent route-map to be applied immediately (still applied after a clear or BGP update/reset) #}
+bgp route-map delay-timer 0
+!
+{% for community in community_sets %}
+{{ community }}
+{% endfor %}
+!
+{% for prefix in prefix_sets %}
+{{ prefix | trim }}
+{% endfor %}
+!
+{% for policy_definitions in policy_definitions %}
+{{ policy_definitions }}
+!
+{% endfor %}
+no bgp route-map delay-timer
