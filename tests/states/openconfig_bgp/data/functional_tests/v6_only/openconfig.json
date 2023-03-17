@@ -1,0 +1,105 @@
+{
+    "bgp": {
+      "neighbors": {
+        "neighbor": [
+          {
+            "neighbor-address": "2001:db8::101",
+            "config": {
+              "peer-group": "",
+              "neighbor-address": "2001:db8::101",
+              "enabled": true,
+              "peer-as": 65001,
+              "local-as": 65501,
+              "auth-password": "",
+              "description": "to:tor1.dc6"
+            },
+            "apply-policy": {
+              "config": {
+                "import-policy": [
+                  "RM-LAN-IN"
+                ],
+                "default-import-policy": null,
+                "export-policy": [
+                  "RM-LAN-OUT"
+                ],
+                "default-export-policy": null
+              }
+            },
+            "afi-safis": {
+              "afi-safi": [
+                {
+                  "afi-safi-name": "IPV6_UNICAST",
+                  "ipv4-unicast": null,
+                  "config": {
+                    "afi-safi-name": "IPV6_UNICAST",
+                    "enabled": true
+                  },
+                  "ipv6-unicast": {
+                    "config": {
+                      "send-default-route": false
+                    },
+                    "prefix-limit": {
+                      "config": {
+                        "max-prefixes": 1000,
+                        "prevent-teardown": null,
+                        "warning-threshold-pct": null,
+                        "restart-timer": null
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "neighbor-address": "2001:db8::102",
+            "config": {
+              "peer-group": "",
+              "neighbor-address": "2001:db8::102",
+              "enabled": true,
+              "peer-as": 65002,
+              "local-as": 65501,
+              "auth-password": "",
+              "description": "to:tor2.dc6"
+            },
+            "apply-policy": {
+              "config": {
+                "import-policy": [
+                  "RM-LAN-IN"
+                ],
+                "default-import-policy": null,
+                "export-policy": [
+                  "RM-LAN-OUT"
+                ],
+                "default-export-policy": null
+              }
+            },
+            "afi-safis": {
+              "afi-safi": [
+                {
+                  "afi-safi-name": "IPV6_UNICAST",
+                  "config": {
+                    "afi-safi-name": "ipv4-unicast",
+                    "enabled": true
+                  },
+                  "ipv6-unicast": {
+                    "config": {
+                      "send-default-route": false
+                    },
+                    "prefix-limit": {
+                      "config": {
+                        "max-prefixes": 0,
+                        "prevent-teardown": null,
+                        "warning-threshold-pct": null,
+                        "restart-timer": null
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }

@@ -1,0 +1,27 @@
+{% if asset_type == "neighbor" %}
+    {% set asset_name = neighbor["address"] %}
+{% elif asset_type == "peer-group" %}
+    {% set asset_name = peer_group["peer-group-name"] %}
+{% endif %}
+
+{# TODO: don't generate SAFI at all for peer-groups #}
+{% if asset_type == "neighbor" %}
+  {% if not safi or safi["config"]["enabled"] == false %}
+no neighbor {{ asset_name }} activate
+  {% else %}
+neighbor {{ asset_name }} activate
+  {% endif %}
+{% endif %}
+
+{# TODO: factorize because duplicate code with neighbor.j2 #}
+{% if safi and safi.get("apply-policy") and safi["apply-policy"]["config"]["import-policy"] %}
+neighbor {{ asset_name }} route-map {{ safi["apply-policy"]["config"]["import-policy"] | first }} in
+{% else %}
+default neighbor {{ asset_name }} route-map in
+{% endif %}
+
+{% if safi and safi.get("apply-policy") and safi["apply-policy"]["config"]["export-policy"] %}
+neighbor {{ asset_name }} route-map {{ safi["apply-policy"]["config"]["export-policy"] | first }} out
+{% else %}
+default neighbor {{ asset_name }} route-map out
+{% endif %}

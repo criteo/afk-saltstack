@@ -1,0 +1,15 @@
+{% set L3_PROTOCOLS = {
+    "IPV4": "ip",
+    "IPV6": "ipv6",
+}
+%}
+
+{% for prefix in prefixes %}
+{% set is_ipv6 = prefix_set_mode == "IPV6" %}
+{% set range = convert_range(prefix["config"]["masklength-range"], prefix["ip-prefix"], is_ipv6) %}
+{%  if range %}
+{{ L3_PROTOCOLS[prefix_set_mode] }} prefix-list {{ prefix_set_name }} seq {{ loop.index * 10 }} permit {{ prefix["ip-prefix"] }} {{ range }}
+{%  else %}
+{{ L3_PROTOCOLS[prefix_set_mode] }} prefix-list {{ prefix_set_name }} seq {{ loop.index * 10 }} permit {{ prefix["ip-prefix"] }}
+{%  endif %}
+{% endfor %}

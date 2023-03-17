@@ -1,0 +1,20 @@
+{{ global_configuration }}
+
+{% for peer_group in peer_groups %}
+{{ peer_group }}
+{% endfor %}
+
+{% for neighbor in neighbors %}
+{{ neighbor }}
+{% endfor %}
+
+{% if neighbors_to_remove %}
+{{ neighbors_to_remove }}
+{% endif %}
+
+{# check SAFI name for FRR #}
+{% for safi_name, safi in safis.items() %}
+    {% for safi_config in safi %}
+{{ safi_config }}
+    {% endfor -%}
+{% endfor -%}

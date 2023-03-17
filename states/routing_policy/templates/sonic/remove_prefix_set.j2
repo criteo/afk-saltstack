@@ -1,0 +1,7 @@
+{% set L3_PROTOCOLS = {
+    "IPV4": "ip",
+    "IPV6": "ipv6",
+}
+%}
+
+no {{ L3_PROTOCOLS[prefix_set_mode] }} prefix-list {{ prefix_set_name }}

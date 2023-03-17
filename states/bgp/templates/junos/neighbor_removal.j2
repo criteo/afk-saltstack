@@ -1,0 +1,15 @@
+{% for neighbor in unwanted_neighbors %}
+    {% set path = "" %}
+
+    {% if neighbor["vrf"] %}
+    {% set path = path + "routing-instances " + neighbor["vrf"] %}
+    {% endif %}
+
+    {% set path = path + " protocols bgp" %}
+
+    {% if neighbor["peer_group"] %}
+    {% set path = path + " group " + neighbor["peer_group"] %}
+    {% endif %}
+
+delete {{ path }} neighbor {{ neighbor["remote_address"] }}
+{% endfor %}

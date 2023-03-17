@@ -1,0 +1,31 @@
+{
+    "result": [
+        {
+            "remote_as": 65001,
+            "local_as": 65501,
+            "remote_address": "192.0.2.1",
+            "vrf": "default",
+            "export_policy": "RM-LAN-OUT",
+            "import_policy": "RM-LAN-IN",
+            "state": "up"
+        },
+        {
+            "remote_as": 65001,
+            "local_as": 65501,
+            "remote_address": "10.0.0.1",
+            "vrf": "default",
+            "export_policy": "RM-LAN-OUT",
+            "import_policy": "RM-LAN-IN",
+            "state": "down"
+        },
+        {
+            "remote_as": 65001,
+            "local_as": 65501,
+            "remote_address": "10.0.0.2",
+            "vrf": "default",
+            "export_policy": "RM-LAN-OUT",
+            "import_policy": "RM-LAN-IN",
+            "state": "down"
+        }
+    ]
+}

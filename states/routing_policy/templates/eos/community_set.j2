@@ -1,0 +1,3 @@
+{% for community_member in community["community-member"] %}
+ip community-list regexp {{ community["community-set-name"] }} permit {{ community_member }}
+{% endfor %}

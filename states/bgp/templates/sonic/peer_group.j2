@@ -1,0 +1,17 @@
+neighbor {{ peer_group["peer-group-name"] }} peer-group
+
+{% if peer_group["config"]["local-as"] %}
+neighbor {{ peer_group["peer-group-name"] }} local-as {{ peer_group["config"]["local-as"] }}
+{% else %}
+no neighbor {{ peer_group["peer-group-name"] }} local-as
+{% endif %}
+
+{% if peer_group["config"]["peer-as"] %}
+neighbor {{ peer_group["peer-group-name"] }} remote-as {{ peer_group["config"]["peer-as"] }}
+{% endif %}
+
+{% if peer_group["config"]["description"] %}
+neighbor {{ peer_group["peer-group-name"] }} description {{ peer_group["config"]["description"] }}
+{% else %}
+no neighbor {{ peer_group["peer-group-name"] }} description
+{% endif %}

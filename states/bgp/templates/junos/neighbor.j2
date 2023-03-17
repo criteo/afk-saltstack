@@ -1,0 +1,60 @@
+{% if vrf %}
+{% set vrf_path = "routing-instances " + vrf %}
+{% else %}
+{% set vrf_path = "" %}
+{% endif %}
+
+{% if neighbor["config"]["peer-group"] %}
+{% set target_peer_group = neighbor["config"]["peer-group"] %}
+{% else %}
+{# peer_group is mandatory, so we define a default one if not set #}
+{% set target_peer_group = "AUTOGEN_DEFAULT" %}
+{% endif %}
+{% set path = vrf_path + " protocols bgp group " + target_peer_group %}
+
+{# Delete neighbor if peer-group is being changed #}
+{% if current_config.get(neighbor["neighbor-address"]) and current_config[neighbor["neighbor-address"]]["peer_group"] %}
+    {% if current_config[neighbor["neighbor-address"]]["peer_group"] != target_peer_group %}
+delete {{ vrf_path }} protocols bgp group {{ current_config[neighbor["neighbor-address"]]["peer_group"] }} neighbor {{ neighbor["neighbor-address"] }}
+    {% endif %}
+{% endif %}
+
+set {{ path }} neighbor {{ neighbor["neighbor-address"] }} peer-as {{ neighbor["config"]["peer-as"] }}
+
+{# We could enforce local-as to avoid this condition #}
+{% if neighbor["config"]["local-as"] != global_as %}
+set {{ path }} neighbor {{ neighbor["neighbor-address"] }} local-as {{ neighbor["config"]["local-as"] }}
+{% else %}
+delete {{ path }} neighbor {{ neighbor["neighbor-address"] }} local-as
+{% endif %}
+
+{# Set an administrative distance for ebgp sessions (170 by default in JunOS) #}
+{% if neighbor["config"]["local-as"] != neighbor["config"]["peer-as"] %}
+set {{ path }} preference {{ bgp_distance.get("external", 20) }}
+{% elif bgp_distance.get("internal") %}
+set {{ path }} preference {{ bgp_distance["internal"] }}
+{% else %}
+delete {{ path }} preference 20
+{% endif %}
+
+{% if neighbor["config"].get("description") %}
+set {{ path }} neighbor {{ neighbor["neighbor-address"] }} description "{{ neighbor["config"]["description"] }}"
+{% else %}
+delete {{ path }} neighbor {{ neighbor["neighbor-address"] }} description
+{% endif %}
+
+{% if neighbor["config"]["auth-password"] %}
+set {{ path }} neighbor {{ neighbor["neighbor-address"] }} authentication-key {{ neighbor["config"]["auth-password"] }}
+{% else %}
+delete {{ path }} neighbor {{ neighbor["neighbor-address"] }} authentication-key
+{% endif %}
+
+{# could use shutdown, but only supported starting JunOS 19.1 #}
+{% if neighbor["config"]["enabled"] == true %}
+activate {{ path }} neighbor {{ neighbor["neighbor-address"] }}
+{% else %}
+deactivate {{ path }} neighbor {{ neighbor["neighbor-address"] }}
+{% endif %}
+
+delete {{ path }} neighbor {{ neighbor["neighbor-address"] }} import
+delete {{ path }} neighbor {{ neighbor["neighbor-address"] }} export

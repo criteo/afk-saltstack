@@ -1,0 +1,306 @@
+{
+    "bgp": {
+        "neighbors": {
+            "neighbor": [
+                {
+                    "neighbor-address": "192.0.2.1",
+                    "config": {
+                        "peer-group": "RA02.01:PG-TOR",
+                        "neighbor-address": "192.0.2.1",
+                        "enabled": true,
+                        "peer-as": 65001,
+                        "local-as": 65501,
+                        "auth-password": "",
+                        "description": "to:tor1.dc6"
+                    },
+                    "apply-policy": {
+                        "config": {
+                            "import-policy": [],
+                            "export-policy": []
+                        }
+                    },
+                    "afi-safis": {
+                        "afi-safi": [
+                            {
+                                "afi-safi-name": "IPV4_UNICAST",
+                                "config": {
+                                    "afi-safi-name": "IPV4_UNICAST",
+                                    "enabled": true
+                                },
+                                "apply-policy": {
+                                    "config": {
+                                        "import-policy": [
+                                            "RM-TEST"
+                                        ],
+                                        "export-policy": [
+                                            "RM-TEST-OUT"
+                                        ]
+                                    }
+                                },
+                                "ipv4-unicast": {
+                                    "prefix-limit": {
+                                        "config": {
+                                            "max-prefixes": 1000
+                                        }
+                                    }
+                                },
+                                "ipv6-unicast": null
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    },
+    "routing-policy": {
+        "policy-definitions": {
+            "policy-definition": [
+                {
+                    "config": {
+                        "name": "RM-TEST"
+                    },
+                    "name": "RM-TEST",
+                    "statements": {
+                        "statement": [
+                            {
+                                "actions": {
+                                    "config": {
+                                        "policy-result": "REJECT_ROUTE"
+                                    },
+                                    "bgp-actions": {
+                                        "config": {
+                                            "set-route-origin": "EGP",
+                                            "set-local-pref": 5678,
+                                            "set-next-hop": null,
+                                            "set-med": 250
+                                        },
+                                        "set-as-path-prepend": {
+                                            "config": {
+                                                "repeat-n": 3,
+                                                "asn": 65000
+                                            }
+                                        },
+                                        "set-community": {
+                                            "config": {
+                                                "method": "INLINE",
+                                                "options": "REPLACE"
+                                            },
+                                            "inline": {
+                                                "config": {
+                                                    "communities": [
+                                                        "65000:50000"
+                                                    ]
+                                                }
+                                            },
+                                            "reference": {
+                                                "config": {
+                                                    "community-set-ref": null
+                                                }
+                                            }
+                                        },
+                                        "set-ext-community": null
+                                    }
+                                },
+                                "conditions": {
+                                    "config": {
+                                        "call-policy": null,
+                                        "install-protocol-eq": "DIRECTLY_CONNECTED"
+                                    },
+                                    "match-prefix-set": {
+                                        "config": {
+                                            "prefix-set": "PF-LOOPBACK_IPV4"
+                                        }
+                                    },
+                                    "bgp-conditions": {
+                                        "config": {
+                                            "med-eq": null,
+                                            "origin-eq": null,
+                                            "next-hop-in": null,
+                                            "afi-safi-in": null,
+                                            "local-pref-eq": 1234,
+                                            "community-set": "CL-LOCAL",
+                                            "ext-community-set": null
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "name": "10"
+                                },
+                                "name": "10"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "config": {
+                        "name": "RM-TEST-OUT"
+                    },
+                    "name": "RM-TEST-OUT",
+                    "statements": {
+                        "statement": [
+                            {
+                                "actions": {
+                                    "config": {
+                                        "policy-result": "REJECT_ROUTE"
+                                    },
+                                    "bgp-actions": null
+                                },
+                                "conditions": {
+                                    "config": {
+                                        "call-policy": null,
+                                        "install-protocol-eq": null
+                                    },
+                                    "match-prefix-set": null,
+                                    "bgp-conditions": {
+                                        "config": {
+                                            "med-eq": null,
+                                            "origin-eq": null,
+                                            "next-hop-in": null,
+                                            "afi-safi-in": null,
+                                            "local-pref-eq": null,
+                                            "community-set": null,
+                                            "ext-community-set": null
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "name": "10"
+                                },
+                                "name": "10"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "defined-sets": {
+            "bgp-defined-sets": {
+                "community-sets": {
+                    "community-set": [
+                        {
+                            "community-set-name": "CL-LOCAL",
+                            "config": {
+                                "community-member": [
+                                    "65000:100."
+                                ],
+                                "community-set-name": "CL-LOCAL"
+                            }
+                        },
+                        {
+                            "community-set-name": "CL-MAIN",
+                            "config": {
+                                "community-member": [
+                                    "649..:20000"
+                                ],
+                                "community-set-name": "CL-MAIN"
+                            }
+                        },
+                        {
+                            "community-set-name": "CL-SERVICE",
+                            "config": {
+                                "community-member": [
+                                    "65000:5...."
+                                ],
+                                "community-set-name": "CL-SERVICE"
+                            }
+                        },
+                        {
+                            "community-set-name": "CL-DEFAULT",
+                            "config": {
+                                "community-member": [
+                                    "65000:60000"
+                                ],
+                                "community-set-name": "CL-DEFAULT"
+                            }
+                        },
+                        {
+                            "community-set-name": "CL-LOCATION",
+                            "config": {
+                                "community-member": [
+                                    "65000:65001"
+                                ],
+                                "community-set-name": "CL-LOCATION"
+                            }
+                        },
+                        {
+                            "community-set-name": "CL-CLOS_INFRA",
+                            "config": {
+                                "community-member": [
+                                    "65000:10100"
+                                ],
+                                "community-set-name": "CL-CLOS_INFRA"
+                            }
+                        },
+                        {
+                            "community-set-name": "CL-SERVER",
+                            "config": {
+                                "community-member": [
+                                    "65000:10200"
+                                ],
+                                "community-set-name": "CL-SERVER"
+                            }
+                        }
+                    ]
+                }
+            },
+            "prefix-sets": {
+                "prefix-set": [
+                    {
+                        "config": {
+                            "name": "PF-LOOPBACK_IPV4",
+                            "mode": "IPV4"
+                        },
+                        "name": "PF-LOOPBACK_IPV4",
+                        "prefixes": {
+                            "prefix": [
+                                {
+                                    "ip-prefix": "10.0.0.0/22",
+                                    "masklength-range": "exact",
+                                    "config": {
+                                        "ip-prefix": "10.0.0.0/22",
+                                        "masklength-range": "exact"
+                                    }
+                                },
+                                {
+                                    "ip-prefix": "10.0.1.0/22",
+                                    "masklength-range": "exact",
+                                    "config": {
+                                        "ip-prefix": "10.0.1.0/22",
+                                        "masklength-range": "exact"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "config": {
+                            "name": "PF-LOOPBACK_IPV6",
+                            "mode": "IPV6"
+                        },
+                        "name": "PF-LOOPBACK_IPV6",
+                        "prefixes": {
+                            "prefix": [
+                                {
+                                    "ip-prefix": "2001:db8:1::/64",
+                                    "masklength-range": "exact",
+                                    "config": {
+                                        "ip-prefix": "2001:db8:1::/64",
+                                        "masklength-range": "exact"
+                                    }
+                                },
+                                {
+                                    "ip-prefix": "2001:db8:1::/128",
+                                    "masklength-range": "exact",
+                                    "config": {
+                                        "ip-prefix": "2001:db8:1::/128",
+                                        "masklength-range": "exact"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

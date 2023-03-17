@@ -1,0 +1,4 @@
+{% set is_ipv6 = prefix_set_mode == "IPV6" %}
+{% for prefix in prefixes %}
+set policy-options route-filter-list {{ prefix_set_name }} {{ prefix["ip-prefix"] }} {{ convert_range(prefix["config"]["masklength-range"], prefix["ip-prefix"], is_ipv6) }}
+{% endfor %}

@@ -1,0 +1,36 @@
+no ip community-list CL-LOCAL
+ip community-list regexp CL-LOCAL permit 65000:100.
+no ip community-list CL-MAIN
+ip community-list regexp CL-MAIN permit 649..:20000
+no ip community-list CL-SERVICE
+ip community-list regexp CL-SERVICE permit 65000:5....
+no ip community-list CL-DEFAULT
+ip community-list regexp CL-DEFAULT permit 65000:60000
+no ip community-list CL-LOCATION
+ip community-list regexp CL-LOCATION permit 65000:65001
+no ip community-list CL-CLOS_INFRA
+ip community-list regexp CL-CLOS_INFRA permit 65000:10100
+no ip community-list CL-SERVER
+ip community-list regexp CL-SERVER permit 65000:10200
+!
+no ip prefix-list PF-LOOPBACK_IPV4
+ip prefix-list PF-LOOPBACK_IPV4 seq 10 permit 10.0.0.0/22
+ip prefix-list PF-LOOPBACK_IPV4 seq 20 permit 10.0.1.0/22
+no ipv6 prefix-list PF-LOOPBACK_IPV6
+ipv6 prefix-list PF-LOOPBACK_IPV6
+  seq 10 permit 2001:db8:1::/64
+  seq 20 permit 2001:db8:1::/128
+!
+no route-map RM-TEST
+route-map RM-TEST deny 10
+  match ip address prefix-list PF-LOOPBACK_IPV4
+  match source-protocol connected
+  set local-preference 1234
+  match community CL-LOCAL
+  set origin EGP
+  set local-preference 5678
+  set metric 250
+  set as-path prepend 65000 65000 65000
+  set community 65000:50000
+no route-map RM-TEST-OUT
+route-map RM-TEST-OUT deny 10

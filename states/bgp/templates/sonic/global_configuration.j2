@@ -1,0 +1,47 @@
+{# Hardcoded options #}
+bgp log-neighbor-changes
+bgp bestpath as-path multipath-relax
+
+{% if config.get("config", {}).get("router-id") %}
+bgp router-id {{ config["config"]["router-id"] }}
+{% else %}
+no bgp router-id
+{% endif %}
+
+{% set distances = config.get("default-route-distance", {}).get("config", {}) %}
+{% set internal_distance = distances.get("internal-route-distance", 200) %}
+distance bgp {{ distances.get("external-route-distance", 20) }} {{ internal_distance }} {{ internal_distance }}
+
+{% if config.get("graceful-restart", {}).get("config", {}).get("enabled") == True %}
+bgp graceful-restart
+bgp graceful-restart preserve-fw-state
+  {% if config["graceful-restart"]["config"].get("restart-time") %}
+bgp graceful-restart restart-time {{ config["graceful-restart"]["config"]["restart-time"] }}
+  {% else %}
+no bgp graceful-restart restart-time
+  {% endif %}
+{% else %}
+no bgp graceful-restart
+no bgp graceful-restart preserve-fw-state
+no bgp graceful-restart restart-time
+{% endif %}
+
+{% if config.get("use-multiple-paths", {}).get("config", {}).get("enabled") %}
+{% set ebgp_maximum_paths = config["use-multiple-paths"].get("ebgp", {}).get("config", {}).get("maximum-paths", 32) %}
+{% set ibgp_maximum_paths = config["use-multiple-paths"].get("ibgp", {}).get("config", {}).get("maximum-paths", 32) %}
+address-family ipv4 unicast
+  maximum-paths {{ ebgp_maximum_paths }}
+  maximum-paths ibgp {{ ibgp_maximum_paths }}
+!
+address-family ipv6 unicast
+  maximum-paths {{ ebgp_maximum_paths }}
+  maximum-paths ibgp {{ ibgp_maximum_paths }}
+{% else %}
+address-family ipv4 unicast
+  no maximum-paths
+  no maximum-paths ibgp
+!
+address-family ipv6 unicast
+  no maximum-paths
+  no maximum-paths ibgp
+{% endif %}

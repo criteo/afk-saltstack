@@ -1,0 +1,54 @@
+neighbor {{ neighbor["neighbor-address"] }} remote-as {{ neighbor["config"]["peer-as"] }}
+
+{# We could enforce local-as to avoid this condition #}
+{% if neighbor["config"]["local-as"] != global_as %}
+neighbor {{ neighbor["neighbor-address"] }} local-as {{ neighbor["config"]["local-as"] }} no-prepend replace-as
+{% else %}
+default neighbor {{ neighbor["neighbor-address"] }} local-as
+{% endif %}
+
+{% if neighbor["config"]["enabled"] == true %}
+default neighbor {{ neighbor["neighbor-address"] }} shutdown
+{% else %}
+neighbor {{ neighbor["neighbor-address"] }} shutdown
+{% endif %}
+
+{% if neighbor["config"]["peer-group"] %}
+neighbor {{ neighbor["neighbor-address"] }} peer-group {{ neighbor["config"]["peer-group"] }}
+{% else %}
+default neighbor {{ neighbor["neighbor-address"] }} peer-group
+{% endif %}
+
+{% if neighbor["config"].get("description") %}
+neighbor {{ neighbor["neighbor-address"] }} description {{ neighbor["config"]["description"] }}
+{% else %}
+default neighbor {{ neighbor["neighbor-address"] }} description
+{% endif %}
+
+{% if neighbor["config"]["auth-password"] %}
+neighbor {{ neighbor["neighbor-address"] }} password 7 {{ neighbor["config"]["auth-password"] }}
+{% else %}
+default neighbor {{ neighbor["neighbor-address"] }} password
+{% endif %}
+
+{% if neighbor["apply-policy"]["config"]["import-policy"] %}
+neighbor {{ neighbor["neighbor-address"] }} route-map {{ neighbor["apply-policy"]["config"]["import-policy"] | first }} in
+{% else %}
+default neighbor {{ neighbor["neighbor-address"] }} route-map in
+{% endif %}
+
+{% if neighbor["apply-policy"]["config"]["export-policy"] %}
+neighbor {{ neighbor["neighbor-address"] }} route-map {{ neighbor["apply-policy"]["config"]["export-policy"] | first }} out
+{% else %}
+default neighbor {{ neighbor["neighbor-address"] }} route-map out
+{% endif %}
+
+{% if not prefix_limit_config or prefix_limit_config["max-prefixes"] == 0  %}
+default neighbor {{ neighbor["neighbor-address"] }} maximum-routes
+{% elif prefix_limit_config.get("prevent-teardown") %}
+neighbor {{ neighbor["neighbor-address"] }} maximum-routes {{ prefix_limit_config["max-prefixes"] }} warning-only
+{% else %}
+neighbor {{ neighbor["neighbor-address"] }} maximum-routes {{ prefix_limit_config["max-prefixes"] }}
+{% endif %}
+
+neighbor {{ neighbor["neighbor-address"] }} send-community

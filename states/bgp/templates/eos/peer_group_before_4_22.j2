@@ -1,0 +1,41 @@
+neighbor {{ peer_group["peer-group-name"] }} peer-group
+
+{% if peer_group["config"]["local-as"] %}
+neighbor {{ peer_group["peer-group-name"] }} local-as {{ peer_group["config"]["local-as"] }}
+{% else %}
+default neighbor {{ peer_group["peer-group-name"] }} local-as
+{% endif %}
+
+{% if peer_group["config"]["peer-as"] %}
+neighbor {{ peer_group["peer-group-name"] }} remote-as {{ peer_group["config"]["peer-as"] }}
+{% else %}
+default neighbor {{ peer_group["peer-group-name"] }} remote-as
+{% endif %}
+
+{% if peer_group["config"]["description"] %}
+neighbor {{ peer_group["peer-group-name"] }} description {{ peer_group["config"]["description"] }}
+{% else %}
+default neighbor {{ peer_group["peer-group-name"] }} description
+{% endif %}
+
+{% if peer_group["apply-policy"].get("config", {})["import-policy"] %}
+neighbor {{ peer_group["peer-group-name"] }} route-map {{ peer_group["apply-policy"]["config"]["import-policy"] | first }} in
+{% else %}
+default neighbor {{ peer_group["peer-group-name"] }} route-map in
+{% endif %}
+
+{% if peer_group["apply-policy"].get("config", {})["export-policy"] %}
+neighbor {{ peer_group["peer-group-name"] }} route-map {{ peer_group["apply-policy"]["config"]["export-policy"] | first }} out
+{% else %}
+default neighbor {{ peer_group["peer-group-name"] }} route-map out
+{% endif %}
+
+{% if not prefix_limit_config or prefix_limit_config["max-prefixes"] == 0  %}
+default neighbor {{ peer_group["peer-group-name"] }} maximum-routes
+{% elif prefix_limit_config.get("prevent-teardown") %}
+neighbor {{ peer_group["peer-group-name"] }} maximum-routes {{ prefix_limit_config["max-prefixes"] }} warning-only
+{% else %}
+neighbor {{ peer_group["peer-group-name"] }} maximum-routes {{ prefix_limit_config["max-prefixes"] }}
+{% endif %}
+
+neighbor {{ peer_group["peer-group-name"] }} send-community

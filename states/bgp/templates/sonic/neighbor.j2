@@ -1,0 +1,49 @@
+{% set current_peer_group = current_config.get(neighbor["neighbor-address"], {}).get("peer_group") %}
+
+{# Note: removing the remote-as of a neighbor (by removing the remote-as, or removing its peer-group) deconfigures the neighbor #}
+{% if not neighbor["config"]["peer-group"] and current_peer_group %}
+{# when we want to remove the peer-group #}
+no neighbor {{ neighbor["neighbor-address"] }} peer-group {{ current_peer_group }}
+
+{% elif neighbor["config"]["peer-group"] and current_peer_group and neighbor["config"]["peer-group"] != current_peer_group %}
+{# when the neighbor exists with the wrong peer-group #}
+no neighbor {{ neighbor["neighbor-address"] }} peer-group {{ current_peer_group }}
+neighbor {{ neighbor["neighbor-address"] }} peer-group {{ neighbor["config"]["peer-group"] }}
+
+{% elif neighbor["config"]["peer-group"] %}
+{# when the neighbor exists without peer group #}
+neighbor {{ neighbor["neighbor-address"] }} peer-group {{ neighbor["config"]["peer-group"] }}
+{% endif %}
+
+{% if not neighbor["config"]["peer-group"] %}
+{# we set it only if there is no peer-group associated to the neighbor #}
+{# we assume the peer-group, if defined, has a remote-as (mandatory in the CMDB #}
+{# FRR does not allow having the remote-as at both neighbor and peer-group level #}
+{# important notice: don't put this configuration before setting the peer-group (or removing) the peer-group of the neighbor #}
+neighbor {{ neighbor["neighbor-address"] }} remote-as {{ neighbor["config"]["peer-as"] }}
+{% endif %}
+
+{# We could enforce local-as to avoid this condition #}
+{% if neighbor["config"]["local-as"] != global_as %}
+neighbor {{ neighbor["neighbor-address"] }} local-as {{ neighbor["config"]["local-as"] }}
+{% else %}
+no neighbor {{ neighbor["neighbor-address"] }} local-as
+{% endif %}
+
+{% if neighbor["config"].get("description") %}
+neighbor {{ neighbor["neighbor-address"] }} description {{ neighbor["config"]["description"] }}
+{% else %}
+no neighbor {{ neighbor["neighbor-address"] }} description
+{% endif %}
+
+{% if neighbor["config"]["auth-password"] %}
+neighbor {{ neighbor["neighbor-address"] }} password {{ neighbor["config"]["auth-password"] }}
+{% else %}
+no neighbor {{ neighbor["neighbor-address"] }} password
+{% endif %}
+
+{% if neighbor["config"]["enabled"] == true %}
+no neighbor {{ neighbor["neighbor-address"] }} shutdown
+{% else %}
+neighbor {{ neighbor["neighbor-address"] }} shutdown
+{% endif %}

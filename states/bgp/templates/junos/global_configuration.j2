@@ -1,0 +1,17 @@
+{% if vrf %}
+{% set vrf_path = "routing-instances " + vrf %}
+{% else %}
+{% set vrf_path = "" %}
+{% endif %}
+
+{# Hardcoded options #}
+set {{ vrf_path }} protocols bgp multipath multiple-as
+
+{% if config.get("graceful-restart", {}).get("config", {}).get("enabled") == True %}
+set {{ vrf_path }} protocols bgp graceful-restart
+  {% if config["graceful-restart"]["config"].get("restart-time") %}
+set {{ vrf_path }} protocols bgp graceful-restart restart-time {{ config["graceful-restart"]["config"]["restart-time"] }}
+  {% else %}
+delete {{ vrf_path }} protocols bgp graceful-restart restart-time
+  {% endif %}
+{% endif %}
