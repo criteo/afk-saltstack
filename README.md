@@ -8,21 +8,21 @@ This repo contains our Saltstack codebase necessary to apply configuration on ne
 
 ## Be careful
 
-These modules are under active development and is subject to changes.
+These modules are under active development and are subject to changes.
 
 The implementation is opiniated and might not be appropriate for your environment.
 
 You should always test new releases on your infrastructure before going to production.
 
-Criteo cannot be held responsible for incident in your infrastructure.
+Criteo cannot be held responsible for incidents in your infrastructure.
 
 ## Deprecated: peer-groups
 
 Peer Groups are temporarily supported for migration.
 
-We have decided to remove peer-group support to simplify the modules and the template. It will also remove risks associated to changes on peer-group.
+We have decided to remove peer-group support to simplify the modules and the template. It will also remove risks associated with changes in peer groups.
 
-## What it is?
+## What is it?
 
 This repository contains all the necessary modules to apply OpenConfig to network devices. It uses templates to convert OpenConfig to configuration/commands.
 
@@ -61,7 +61,7 @@ file_roots:
 
 ## How to use
 
-* Dry-run: `salt <device> state.apply full_config test=True`
+* Dry run: `salt <device> state.apply full_config test=True`
 * Deploy: `salt <device> state.apply full_config`
 
 ## Dependencies
