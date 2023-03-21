@@ -4,7 +4,7 @@
 
 For a feature request, please create an issue before doing any PR.
 
-The reason for this is simple: we are working very actively on the subject and you might work on an implementation already designed on our side.
+The reason for this is simple: we are working very actively on the subject, and you might work on an implementation already designed on our side.
 
 ## Requirements
 
@@ -15,7 +15,7 @@ Please ensure you have run the following before pushing a commit:
   * `pylama` to run all linters
 
 About the logic:
-  * implementation must be done for all Network OS supported, with the same behaviour
+  * implementation must be done for all Network OS supported, with the same behavior
   * the templates must be as simple as possible (max nested block: three levels)
   * the complexity should be in the state modules
 
@@ -23,7 +23,7 @@ About the logic:
 
 Follow usual best practices:
   * document your code (inline and docstrings)
-  * constant are in upper case
+  * constants are in upper case
   * use comprehensible variable name
   * one function = one purpose
-  * function name should define perfectly its purpose
+  * function name should perfectly define its purpose
