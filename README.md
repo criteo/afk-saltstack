@@ -18,13 +18,13 @@ Criteo cannot be held responsible for incident in your infrastructure.
 
 ## Deprecated: peer-groups
 
-Please be informed that peer-groups are currently support only during transition window. We have decided to remove peer-group support to simplify the modules and the template. It will also remove risks associated to changes on peer-group.
+Peer Groups are temporarily supported for migration.
 
-More info to come in the FAQ...
+We have decided to remove peer-group support to simplify the modules and the template. It will also remove risks associated to changes on peer-group.
 
 ## What it is?
 
-This repository contains all the code necessary to apply OpenConfig to network devices. It uses templates to convert OpenConfig to configuration/commands.
+This repository contains all the necessary modules to apply OpenConfig to network devices. It uses templates to convert OpenConfig to configuration/commands.
 
 It does not aim to cover 100% of OpenConfig model.
 
@@ -48,7 +48,7 @@ Coming support:
 
 ## How to install
 
-The recommended configuration is to download the code in this repo to a dedicated path on your Salt-master.
+The recommended configuration is to download the modules in this repo to a dedicated path on your Salt-master.
 
 Example of salt-master configuration:
 ```yaml
@@ -64,11 +64,10 @@ file_roots:
 * Dry-run: `salt <device> state.apply full_config test=True`
 * Deploy: `salt <device> state.apply full_config`
 
-TODO: complete the documentation...
-
 ## Dependencies
 
 Depending on the Network OS you want to support, you will need:
+
 - [SONiC modules](https://github.com/criteo/sonic-saltstack)
 - [napalm-salt](https://github.com/napalm-automation/napalm-salt) for Juniper JunOS and Arista EOS
 
