@@ -34,13 +34,84 @@ def test__generate_neighbor_part__minimal_ipv4_up(mocker):
         },
     }
 
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
-    # note, we could expect having this:
-    # "neighbor 192.0.2.1 remote-as 65001\n"
-    # but in the CMDB, the peer-group cannot exist without a remote-as
-    #  + there is a check to ensure the remote-as of the peer-group is the same as its neighbor
+    peer_groups = {
+        "PG-DEFAULT": {
+            "peer-group-name": "PG-DEFAULT",
+            "config": {"local-as": None, "peer-as": 65001, "description": ""},
+            "apply-policy": None
+        }
+    }
+
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, peer_groups, None)
     assert neighbor_config == (
         "neighbor 192.0.2.1 peer-group PG-DEFAULT\n"
+        "no neighbor 192.0.2.1 local-as\n"
+        "neighbor 192.0.2.1 description my_neighbor\n"
+        "no neighbor 192.0.2.1 password\n"
+        "no neighbor 192.0.2.1 shutdown"
+    )
+    assert safi_config == {
+        "IPV4_UNICAST": (
+            "no neighbor 192.0.2.1 route-map * in\n"
+            "no neighbor 192.0.2.1 route-map * out\n"
+            "no neighbor 192.0.2.1 maximum-prefix\n"
+            "neighbor 192.0.2.1 activate\n"
+            "neighbor 192.0.2.1 soft-reconfiguration inbound\n"
+            "neighbor 192.0.2.1 send-community"
+        ),
+        "IPV6_UNICAST": (
+            "no neighbor 192.0.2.1 route-map * in\n"
+            "no neighbor 192.0.2.1 route-map * out\n"
+            "no neighbor 192.0.2.1 maximum-prefix\n"
+            "no neighbor 192.0.2.1 activate\n"
+            "no neighbor 192.0.2.1 soft-reconfiguration inbound\n"
+            "no neighbor 192.0.2.1 send-community"
+        ),
+    }
+
+
+@salt_bgp_mock("sonic")
+def test__generate_neighbor_part__minimal_ipv4_up_peer_group_no_as(mocker):
+    """Test neighbor with minimal configuration in IPv4."""
+    config = {
+        "neighbor-address": "192.0.2.1",
+        "config": {
+            "peer-group": "PG-DEFAULT",
+            "neighbor-address": "192.0.2.1",
+            "enabled": True,
+            "peer-as": 65001,
+            "local-as": 65000,
+            "auth-password": "",
+            "description": "my_neighbor",
+            "peer-type": None,
+            "remove-private-as": None,
+            "send-community": "NONE",
+        },
+        "apply-policy": {"config": {"import-policy": [], "export-policy": []}},
+        "afi-safis": {
+            "afi-safi": [
+                {
+                    "afi-safi-name": "IPV4_UNICAST",
+                    "config": {"afi-safi-name": "IPV4_UNICAST", "enabled": True},
+                    "apply-policy": {"config": {"import-policy": [], "export-policy": []}},
+                    "ipv4-unicast": {"prefix-limit": {"config": {"max-prefixes": 0}}},
+                }
+            ]
+        },
+    }
+
+    peer_groups = {
+        "PG-DEFAULT": {
+            "peer-group-name": "PG-DEFAULT",
+            "config": {"local-as": None, "description": ""},
+            "apply-policy": None
+        }
+    }
+
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, peer_groups, None)
+    assert neighbor_config == (
+        "neighbor 192.0.2.1 peer-group PG-DEFAULT\n"
+        "neighbor 192.0.2.1 remote-as 65001\n"
         "no neighbor 192.0.2.1 local-as\n"
         "neighbor 192.0.2.1 description my_neighbor\n"
         "no neighbor 192.0.2.1 password\n"
@@ -99,7 +170,15 @@ def test__generate_neighbor_part__minimal_ipv4_shutdown_different_local_as(mocke
         },
     }
 
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    peer_groups = {
+        "PG-DEFAULT": {
+            "peer-group-name": "PG-DEFAULT",
+            "config": {"local-as": None, "peer-as": 65001, "description": ""},
+            "apply-policy": None
+        }
+    }
+
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, peer_groups, None)
     assert neighbor_config == (
         "neighbor 192.0.2.1 peer-group PG-DEFAULT\n"
         "neighbor 192.0.2.1 local-as 65002\n"
@@ -157,7 +236,15 @@ def test__generate_neighbor_part__minimal_ipv6(mocker):
         },
     }
 
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    peer_groups = {
+        "PG-TOR": {
+            "peer-group-name": "PG-TOR",
+            "config": {"local-as": None, "peer-as": 65001, "description": ""},
+            "apply-policy": None
+        }
+    }
+
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, peer_groups, None)
     assert neighbor_config == (
         "neighbor 2001:db8::1 peer-group PG-TOR\n"
         "no neighbor 2001:db8::1 local-as\n"
@@ -222,7 +309,16 @@ def test__generate_neighbor_part__full(mocker):
             ]
         },
     }
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+
+    peer_groups = {
+        "PG-DEFAULT": {
+            "peer-group-name": "PG-DEFAULT",
+            "config": {"local-as": None, "peer-as": 65001, "description": ""},
+            "apply-policy": None
+        }
+    }
+
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, peer_groups, None)
     assert neighbor_config == (
         "neighbor 192.0.2.1 peer-group PG-DEFAULT\n"
         "neighbor 192.0.2.1 local-as 65002\n"

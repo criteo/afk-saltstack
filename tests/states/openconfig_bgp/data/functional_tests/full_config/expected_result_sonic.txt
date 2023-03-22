@@ -5,7 +5,12 @@ router bgp 65000
     neighbor RA02.01:PG-TOR remote-as 60001
     neighbor RA02.01:PG-TOR description L3_RA
     !
-    neighbor 192.0.2.1 peer-group RA02.01:PG-TOR
+    neighbor RA02.01:PG-TOR-NO-PEER-AS peer-group
+    neighbor RA02.01:PG-TOR-NO-PEER-AS local-as 60000
+    neighbor RA02.01:PG-TOR-NO-PEER-AS description L3_RA
+    !
+    neighbor 192.0.2.1 peer-group RA02.01:PG-TOR-NO-PEER-AS
+    neighbor 192.0.2.1 remote-as 65001
     neighbor 192.0.2.1 local-as 65501
     neighbor 192.0.2.1 description to:tor1.dc6
     no neighbor 192.0.2.1 password
@@ -34,6 +39,10 @@ router bgp 65000
         neighbor RA02.01:PG-TOR route-map RM-LAN-OUT out
         neighbor RA02.01:PG-TOR maximum-prefix 10000
         neighbor RA02.01:PG-TOR send-community
+        neighbor RA02.01:PG-TOR-NO-PEER-AS route-map RM-LAN-IN in
+        neighbor RA02.01:PG-TOR-NO-PEER-AS route-map RM-LAN-OUT out
+        neighbor RA02.01:PG-TOR-NO-PEER-AS maximum-prefix 10000
+        neighbor RA02.01:PG-TOR-NO-PEER-AS send-community
         neighbor 192.0.2.1 route-map RM-LAN-IN in
         neighbor 192.0.2.1 route-map RM-LAN-OUT out
         neighbor 192.0.2.1 maximum-prefix 1000
@@ -64,6 +73,10 @@ router bgp 65000
         neighbor RA02.01:PG-TOR route-map RM-LAN-OUT out
         no neighbor RA02.01:PG-TOR maximum-prefix
         neighbor RA02.01:PG-TOR send-community
+        neighbor RA02.01:PG-TOR-NO-PEER-AS route-map RM-LAN-IN in
+        neighbor RA02.01:PG-TOR-NO-PEER-AS route-map RM-LAN-OUT out
+        no neighbor RA02.01:PG-TOR-NO-PEER-AS maximum-prefix
+        neighbor RA02.01:PG-TOR-NO-PEER-AS send-community
         no neighbor 192.0.2.1 route-map * in
         no neighbor 192.0.2.1 route-map * out
         no neighbor 192.0.2.1 maximum-prefix

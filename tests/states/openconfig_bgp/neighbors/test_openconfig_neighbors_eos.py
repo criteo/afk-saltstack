@@ -34,7 +34,7 @@ def test__generate_neighbor_part__minimal_ipv4_up(mocker):
         },
     }
 
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, {}, None)
     assert neighbor_config == (
         "neighbor 192.0.2.1 remote-as 65001\n"
         "default neighbor 192.0.2.1 local-as\n"
@@ -94,7 +94,7 @@ def test__generate_neighbor_part__minimal_ipv4_shutdown_different_local_as(mocke
         },
     }
 
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, {}, None)
     assert neighbor_config == (
         "neighbor 192.0.2.1 remote-as 65001\n"
         "neighbor 192.0.2.1 local-as 65002 no-prepend replace-as\n"
@@ -151,7 +151,7 @@ def test__generate_neighbor_part__minimal_ipv6(mocker):
         },
     }
 
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, {}, None)
     assert neighbor_config == (
         "neighbor 2001:db8::1 remote-as 65001\n"
         "default neighbor 2001:db8::1 local-as\n"
@@ -215,7 +215,7 @@ def test__generate_neighbor_part__full(mocker):
             ]
         },
     }
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, {}, None)
     assert neighbor_config == (
         "neighbor 192.0.2.1 remote-as 65001\n"
         "neighbor 192.0.2.1 local-as 65002 no-prepend replace-as\n"

@@ -15,11 +15,8 @@ neighbor {{ neighbor["neighbor-address"] }} peer-group {{ neighbor["config"]["pe
 neighbor {{ neighbor["neighbor-address"] }} peer-group {{ neighbor["config"]["peer-group"] }}
 {% endif %}
 
-{% if not neighbor["config"]["peer-group"] %}
-{# we set it only if there is no peer-group associated to the neighbor #}
-{# we assume the peer-group, if defined, has a remote-as (mandatory in the CMDB #}
-{# FRR does not allow having the remote-as at both neighbor and peer-group level #}
-{# important notice: don't put this configuration before setting the peer-group (or removing) the peer-group of the neighbor #}
+{% set peer_group_name = neighbor["config"]["peer-group"] %}
+{% if not peer_group_name or not peer_groups[peer_group_name]["config"]["peer-as"] %}
 neighbor {{ neighbor["neighbor-address"] }} remote-as {{ neighbor["config"]["peer-as"] }}
 {% endif %}
 

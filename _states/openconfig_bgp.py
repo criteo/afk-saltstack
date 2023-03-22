@@ -199,7 +199,9 @@ def _generate_peer_group(peer_group, bgp_distance, saltenv):
 ##
 
 
-def _generate_neighbor_part(neighbor, global_as, prefix_limit_config, bgp_distance, saltenv):
+def _generate_neighbor_part(
+    neighbor, global_as, prefix_limit_config, bgp_distance, peer_groups, saltenv
+):
     """Generate neighbor configuration part."""
     default_vrf = __salt__["pillar.get"]("vrf", {}).get("default", "")
     current_bgp_config = __salt__["criteo_bgp.get_neighbors"](dict_per_address=True).get(
@@ -212,6 +214,7 @@ def _generate_neighbor_part(neighbor, global_as, prefix_limit_config, bgp_distan
         "prefix_limit_config": prefix_limit_config,
         "bgp_distance": bgp_distance,
         "current_config": current_bgp_config,
+        "peer_groups": peer_groups,
     }
 
     nos = _get_os()
@@ -298,14 +301,14 @@ def _get_safi_params(asset):
     return safis, prefix_limit_config
 
 
-def _generate_neighbor_config(neighbor, global_as, bgp_distance, saltenv):
+def _generate_neighbor_config(neighbor, global_as, bgp_distance, peer_groups, saltenv):
     """Generate the entire configuration for a neighbor."""
     # extract parameters from openconfig neighbor tree
     safis, prefix_limit_config = _get_safi_params(neighbor)
 
     # generate neighbor config
     neighbor_config = _generate_neighbor_part(
-        neighbor, global_as, prefix_limit_config, bgp_distance, saltenv
+        neighbor, global_as, prefix_limit_config, bgp_distance, peer_groups, saltenv
     )
 
     # generate safi config for the neighbor
@@ -451,7 +454,9 @@ def _generate_bgp_config(openconfig, remove_extras, rules, saltenv):  # pylint: 
     bgp_distance = _get_administrative_distance(openconfig.get("global", {}))
 
     # generate configuration for all peer groups
+    peer_groups = {}
     for peer_group in openconfig.get("peer-groups", {}).get("peer-group", {}):
+        peer_groups[peer_group["peer-group-name"]] = peer_group
         peer_group_config, safi_config = _generate_peer_group(peer_group, bgp_distance, saltenv)
         peer_group_configs.append(peer_group_config)
 
@@ -463,7 +468,7 @@ def _generate_bgp_config(openconfig, remove_extras, rules, saltenv):  # pylint: 
     # generate configuration for all neighbors and safis
     for neighbor in openconfig["neighbors"]["neighbor"]:
         neighbor_config, safi_config = _generate_neighbor_config(
-            neighbor, global_as, bgp_distance, saltenv
+            neighbor, global_as, bgp_distance, peer_groups, saltenv
         )
         neighbor_configs.append(neighbor_config)
 

@@ -86,11 +86,21 @@ def test__generate_global_configuration_ecmp_neighbors_ebgp(mocker):
             ]
         },
     }
+
+    peer_groups = {
+        "PG-DEFAULT": {
+            "peer-group-name": "PG-DEFAULT",
+            "config": {"local-as": None, "peer-as": 65001, "description": ""},
+            "apply-policy": None
+        }
+    }
+
     bgp_distance = {
         "external": 50,
         "internal": 150,
     }
-    neighbor_config, _ = STATE_MOD._generate_neighbor_config(config, 65000, bgp_distance, None)
+
+    neighbor_config, _ = STATE_MOD._generate_neighbor_config(config, 65000, bgp_distance, peer_groups, None)
     assert neighbor_config == (
         "set routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 peer-as 65001\n"
         "delete routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 local-as\n"
@@ -132,12 +142,21 @@ def test__generate_global_configuration_ecmp_neighbors_ibgp(mocker):
             ]
         },
     }
+
+    peer_groups = {
+        "PG-DEFAULT": {
+            "peer-group-name": "PG-DEFAULT",
+            "config": {"local-as": None, "peer-as": 65000, "description": ""},
+            "apply-policy": None
+        }
+    }
+
     bgp_distance = {
         "external": 50,
         "internal": 150,
     }
 
-    neighbor_config, _ = STATE_MOD._generate_neighbor_config(config, 65000, bgp_distance, None)
+    neighbor_config, _ = STATE_MOD._generate_neighbor_config(config, 65000, bgp_distance, peer_groups, None)
     assert neighbor_config == (
         "set routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 peer-as 65000\n"
         "delete routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 local-as\n"
@@ -170,6 +189,7 @@ def test__generate_global_configuration_ecmp_peer_groups_ebgp(mocker):
             ]
         },
     }
+
     bgp_distance = {
         "external": 50,
         "internal": 150,
