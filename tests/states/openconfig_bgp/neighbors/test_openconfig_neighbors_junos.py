@@ -34,7 +34,7 @@ def test__generate_neighbor_part__minimal_ipv4_up(mocker):
         },
     }
 
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, {}, None)
     assert neighbor_config == (
         "set routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 peer-as 65001\n"
         "delete routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 local-as\n"
@@ -89,7 +89,7 @@ def test__generate_neighbor_part__minimal_ipv4_shutdown_different_local_as(mocke
         },
     }
 
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, {}, None)
     assert neighbor_config == (
         "set routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 peer-as 65001\n"
         "set routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 local-as 65002\n"
@@ -141,7 +141,7 @@ def test__generate_neighbor_part__minimal_ipv4_with_route_maps(mocker):
         },
     }
 
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, {}, None)
     assert neighbor_config == (
         "set routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 peer-as 65001\n"
         "delete routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 local-as\n"
@@ -194,7 +194,7 @@ def test__generate_neighbor_part__minimal_ipv6(mocker):
         },
     }
 
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, {}, None)
     assert neighbor_config == (
         "set routing-instances prod protocols bgp group PG-TOR neighbor 2001:db8::1 peer-as 65001\n"
         "delete routing-instances prod protocols bgp group PG-TOR neighbor 2001:db8::1 local-as\n"
@@ -252,7 +252,7 @@ def test__generate_neighbor_part__full(mocker):
             ]
         },
     }
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, {}, None)
     assert neighbor_config == (
         "set routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 peer-as 65001\n"
         "set routing-instances prod protocols bgp group PG-DEFAULT neighbor 192.0.2.1 local-as 65002\n"
@@ -310,7 +310,7 @@ def test__generate_neighbor_part__exists_in_another_pg(mocker):
         },
     }
 
-    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, None)
+    neighbor_config, safi_config = STATE_MOD._generate_neighbor_config(config, 65000, {}, {}, None)
     assert neighbor_config == (
         "set routing-instances prod protocols bgp group NEW-PG neighbor 192.0.2.2 peer-as 65001\n"
         "delete routing-instances prod protocols bgp group NEW-PG neighbor 192.0.2.2 local-as\n"

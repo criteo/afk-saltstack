@@ -5,7 +5,7 @@
         {
           "neighbor-address": "192.0.2.1",
           "config": {
-            "peer-group": "RA02.01:PG-TOR",
+            "peer-group": "RA02.01:PG-TOR-NO-PEER-AS",
             "neighbor-address": "192.0.2.1",
             "enabled": true,
             "peer-as": 65001,
@@ -225,6 +225,43 @@
           "config": {
             "local-as": 60000,
             "peer-as": 60001,
+            "description": "L3_RA"
+          },
+          "apply-policy": {
+            "config": {
+              "import-policy": [
+                "RM-LAN-IN"
+              ],
+              "export-policy": [
+                "RM-LAN-OUT"
+              ]
+            }
+          },
+          "afi-safis": {
+            "afi-safi": [
+              {
+                "afi-safi-name": "IPV4_UNICAST",
+                "config": {
+                  "afi-safi-name": "IPV4_UNICAST",
+                  "enabled": true
+                },
+                "apply-policy": {},
+                "ipv4-unicast": {
+                  "prefix-limit": {
+                    "config": {
+                      "max-prefixes": 10000
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "peer-group-name": "RA02.01:PG-TOR-NO-PEER-AS",
+          "config": {
+            "local-as": 60000,
+            "peer-as": null,
             "description": "L3_RA"
           },
           "apply-policy": {
