@@ -26,4 +26,4 @@ Follow usual best practices:
   * constants are in upper case
   * use comprehensible variable name
   * one function = one purpose
-  * function name should perfectly define its purpose
+  * function name should define its purpose perfectly
