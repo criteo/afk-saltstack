@@ -158,7 +158,7 @@ def _generate_community_set_config(community, saltenv):
             suffix = "_before_4_22"
 
     return _apply_template(
-        "salt://states/routing_policy/templates/{}/community_set{}.j2".format(nos, suffix),
+        "salt://states/afk/templates/routing_policy/{}/community_set{}.j2".format(nos, suffix),
         context,
         saltenv,
     )
@@ -172,7 +172,7 @@ def _remove_community_set_config(community_name, saltenv):
 
     nos = _get_os()
     return _apply_template(
-        "salt://states/routing_policy/templates/{}/remove_community_set.j2".format(nos),
+        "salt://states/afk/templates/routing_policy/{}/remove_community_set.j2".format(nos),
         context,
         saltenv,
     )
@@ -214,7 +214,7 @@ def _generate_prefix_set_config(prefix_set, saltenv):
 
     nos = _get_os()
     return _apply_template(
-        "salt://states/routing_policy/templates/{}/prefix_set.j2".format(nos), context, saltenv
+        "salt://states/afk/templates/routing_policy/{}/prefix_set.j2".format(nos), context, saltenv
     )
 
 
@@ -227,7 +227,7 @@ def _remove_prefix_set_config(prefix_set_name, prefix_set_mode, saltenv):
 
     nos = _get_os()
     return _apply_template(
-        "salt://states/routing_policy/templates/{}/remove_prefix_set.j2".format(nos),
+        "salt://states/afk/templates/routing_policy/{}/remove_prefix_set.j2".format(nos),
         context,
         saltenv,
     )
@@ -307,7 +307,7 @@ def _generate_statement_config(route_map_name, afisafis, statement, prefixes_set
 
     nos = _get_os()
     return _apply_template(
-        "salt://states/routing_policy/templates/{}/statement.j2".format(nos), context, saltenv
+        "salt://states/afk/templates/routing_policy/{}/statement.j2".format(nos), context, saltenv
     )
 
 
@@ -320,7 +320,9 @@ def _remove_route_policy_config(route_map_name, saltenv):
 
     nos = _get_os()
     return _apply_template(
-        "salt://states/routing_policy/templates/{}/remove_policy.j2".format(nos), context, saltenv
+        "salt://states/afk/templates/routing_policy/{}/remove_policy.j2".format(nos),
+        context,
+        saltenv,
     )
 
 
@@ -441,7 +443,9 @@ def _generate_routing_policy_config(openconfig_routing_policy, openconfig_bgp, _
 
     nos = _get_os()
     config = _apply_template(
-        "salt://states/routing_policy/templates/{}/routing_policy.j2".format(nos), context, saltenv
+        "salt://states/afk/templates/routing_policy/{}/routing_policy.j2".format(nos),
+        context,
+        saltenv,
     )
 
     log.debug("generated config parts: %s", config)

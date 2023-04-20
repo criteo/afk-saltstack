@@ -92,7 +92,7 @@ def _generate_global_conf_part(config, saltenv):
         "vrf": default_vrf,  # TODO: add VRF support
     }
 
-    template = "salt://states/bgp/templates/{}/global_configuration.j2".format(nos)
+    template = "salt://states/afk/templates/bgp/{}/global_configuration.j2".format(nos)
 
     return _apply_template(template, context, saltenv)
 
@@ -169,7 +169,7 @@ def _generate_peer_group_part(peer_group, prefix_limit_config, bgp_distance, sal
         if major == 4 and minor < 22:
             suffix = "_before_4_22"
 
-    template = "salt://states/bgp/templates/{}/peer_group{}.j2".format(nos, suffix)
+    template = "salt://states/afk/templates/bgp/{}/peer_group{}.j2".format(nos, suffix)
 
     return _apply_template(template, context, saltenv)
 
@@ -218,7 +218,7 @@ def _generate_neighbor_part(
     }
 
     nos = _get_os()
-    template = "salt://states/bgp/templates/{}/neighbor.j2".format(nos)
+    template = "salt://states/afk/templates/bgp/{}/neighbor.j2".format(nos)
 
     return _apply_template(template, context, saltenv)
 
@@ -270,7 +270,7 @@ def _generate_safi_part(safi_name, params, asset, asset_type, saltenv):
     # getting global route-maps (see docstring of _get_global_route_maps)
     context["global_route_map"] = _get_global_route_maps(asset)
 
-    template = "salt://states/bgp/templates/{}/safi.j2".format(nos)
+    template = "salt://states/afk/templates/bgp/{}/safi.j2".format(nos)
 
     return _apply_template(template, context, saltenv)
 
@@ -429,7 +429,7 @@ def _remove_neighbor_config(neighbors, rules, saltenv):
 
     # generate the command to remove them
     return _apply_template(
-        "salt://states/bgp/templates/{}/neighbor_removal.j2".format(nos), context, saltenv
+        "salt://states/afk/templates/bgp/{}/neighbor_removal.j2".format(nos), context, saltenv
     )
 
 
@@ -494,7 +494,7 @@ def _generate_bgp_config(openconfig, remove_extras, rules, saltenv):  # pylint: 
         "safis": safi_configs,
     }
 
-    template = "salt://states/bgp/templates/{}/bgp.j2".format(nos)
+    template = "salt://states/afk/templates/bgp/{}/bgp.j2".format(nos)
 
     config = _apply_template(template, context, saltenv)
 
