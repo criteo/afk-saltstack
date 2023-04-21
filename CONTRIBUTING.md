@@ -10,6 +10,8 @@ The reason for this is simple: we are working very actively on the subject, and 
 
 **unit and functionals tests** are mandatory.
 
+Please use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).
+
 Please ensure you have run the following before pushing a commit:
   * `black` and `isort` (or `invoke reformat`)
   * `pylama` to run all linters

@@ -1,10 +1,12 @@
 # Saltstack Openconfig module
 
-> This repository is part of [Criteo AFK](https://github.com/criteo/criteo-network-automation-stack)
+> This repository is part of [AFK](https://criteo.github.io/AFK)
 
 ## Context
 
 This repo contains our Saltstack codebase necessary to apply configuration on network devices using configuration inputs in OpenConfig.
+
+The full documentation can be found here: [AFK documentation](https://criteo.github.io/AFK/SaltStack-OpenConfig/installation/)
 
 ## Be careful
 
@@ -32,19 +34,6 @@ Supported Network OS:
 - [SONiC](https://github.com/sonic-net/SONiC)
 - Juniper JunOS
 - Arista EOS
-
-Supported modules:
-- BGP
-- Routing policy
-
-Coming support:
-- BGP EVPN
-- VXLAN type 5
-- Interfaces
-- Syslog
-- SNMP
-- TACACS (to be confirmed)
-- Users (to be confirmed)
 
 ## How to install
 
