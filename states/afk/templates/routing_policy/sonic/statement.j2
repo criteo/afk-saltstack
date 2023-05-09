@@ -18,7 +18,6 @@
     "BGP": "bgp",
     "ISIS": "isis",
     "OSPF": "ospf",
-    "OSPF3": "ospfv3",
     "STATIC": "static",
     "DIRECTLY_CONNECTED": "connected",
   }
@@ -46,9 +45,10 @@ route-map {{ route_map_name }} {{ ACTION[actions["config"]["policy-result"]] }} 
   {% set prefix_set_mode = prefixes_set_mode[conditions["match-prefix-set"]["config"].get("prefix-set")] %}
   match {{ L3_PROTOCOLS[prefix_set_mode] }} address prefix-list {{ conditions["match-prefix-set"]["config"]["prefix-set"] }}
 
-  {# Hardcoded to be ISO with SONiC template. TODO: remove once we have SONiC migrated to >= 202111 #}
-  {% if route_map_name == "RM-LAN-IN" and sequence == "10" and conditions["match-prefix-set"]["config"]["prefix-set"] == "PF-ANY_IPV6" %}
-  continue
+  {# Hardcoded patch for 201911 bug (fixed in next major release). TODO: remove once we have SONiC migrated to >= 202111 #}
+  {% if route_map_name == "RM-CLOS-IN" and sequence == "10" and conditions["match-prefix-set"]["config"]["prefix-set"] == "PF-ANY_IPV6" %}
+  set ipv6 next-hop prefer-global
+  on-match next
   {% endif %}
 {% endif %}
 
@@ -69,13 +69,13 @@ route-map {{ route_map_name }} {{ ACTION[actions["config"]["policy-result"]] }} 
 {% endif %}
 
 {% if conditions["config"]["call-policy"] %}
-  sub-route-map {{ conditions["config"]["call-policy"] }}
+  call {{ conditions["config"]["call-policy"] }}
 {% endif %}
 
 {# Actions #}
 
 {% if actions["bgp-actions"] and actions["bgp-actions"]["config"].get("set-route-origin") %}
-  set origin {{ actions["bgp-actions"]["config"]["set-route-origin"] }}
+  set origin {{ actions["bgp-actions"]["config"]["set-route-origin"]|lower }}
 {% endif %}
 
 {% if actions["bgp-actions"] and actions["bgp-actions"]["config"].get("set-local-pref") %}
@@ -83,7 +83,7 @@ route-map {{ route_map_name }} {{ ACTION[actions["config"]["policy-result"]] }} 
 {% endif %}
 
 {% if actions["bgp-actions"] and actions["bgp-actions"]["config"].get("set-next-hop") %}
-  {# TODO ipv6? #}
+  {# TODO ipv6 #}
   {% if actions["bgp-actions"]["config"]["set-next-hop"] == "SELF" %}
   {%   set next_hop = "peer-address" %}
   {% else %}
@@ -107,6 +107,7 @@ route-map {{ route_map_name }} {{ ACTION[actions["config"]["policy-result"]] }} 
   {% if actions["bgp-actions"]["set-community"]["config"].get("method") == "INLINE" %}
   set community {{ actions["bgp-actions"]["set-community"]["inline"]["config"]["communities"]|join(" ") }}
   {% else %}
-  set community community-list {{ actions["bgp-actions"]["set-community"]["reference"]["config"].get("community-set-ref") }}
+  {# NOT SUPPORTED: not implemented in CMDB #}
+  {# It would need to join community_sets.community_set[0-n].config.community-member #}
   {% endif %}
 {% endif %}
