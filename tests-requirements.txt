@@ -10,5 +10,5 @@ pyflakes==2.4.0
 pytest
 pytest-benchmark
 pytest-mock
-salt==3004
+salt==3004.2
 tox
