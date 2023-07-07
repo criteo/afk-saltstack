@@ -83,7 +83,11 @@ route-map {{ route_map_name }} {{ ACTION[actions["config"]["policy-result"]] }} 
 {% endif %}
 
 {% if actions["bgp-actions"] and actions["bgp-actions"]["config"].get("set-next-hop") %}
-  set ip next-hop {{ next_hop }}
+  {% if ":" in actions["bgp-actions"]["config"]["set-next-hop"] %}
+  set ipv6 next-hop {{ actions["bgp-actions"]["config"]["set-next-hop"] }}
+  {% else %}
+  set ip next-hop {{ actions["bgp-actions"]["config"]["set-next-hop"] }}
+  {% endif %}
 {% endif %}
 
 {% if actions["bgp-actions"] and actions["bgp-actions"]["config"].get("set-med") %}
