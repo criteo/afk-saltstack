@@ -1,9 +1,10 @@
-"""Functional test of openconfig_routing_policy for eos."""
+"""integration test of openconfig_routing_policy for JunOS."""
 import functools
 import json
 
 import _states.openconfig_routing_policy as STATE_MOD
-from _utils import frr_detect_diff, jinja_filters
+import _utils.jinja_filters as STATE_UTIL
+import pytest
 from jinja2 import BaseLoader, Environment
 
 ##
@@ -12,7 +13,7 @@ from jinja2 import BaseLoader, Environment
 
 
 def _get_data_and_expected_result(os_name):
-    test_path = "tests/states/openconfig_routing_policy/data/functional_tests"
+    test_path = "tests/states/openconfig_routing_policy/data/integration_tests"
     with open(
         f"{test_path}/openconfig.json",
         encoding="utf-8",
@@ -44,15 +45,13 @@ def _mock_get_file_str(template_name, *_, **__):
 
 
 def _apply_common_mock(mocker):
-    mocker.patch("_states.openconfig_routing_policy._get_os", return_value="eos")
+    mocker.patch("_states.openconfig_routing_policy._get_os", return_value="junos")
     STATE_MOD.__salt__ = {
         "file.apply_template_on_contents": _mock_apply_template_on_contents,
         "cp.get_file_str": _mock_get_file_str,
-        "eos.get_bgp_config": lambda *_: (""),
     }
     STATE_MOD.__utils__ = {
-        "frr_detect_diff.get_objects": frr_detect_diff.get_objects,
-        "jinja_filters.format_route_policy_name": jinja_filters.format_route_policy_name,
+        "jinja_filters.format_route_policy_name": STATE_UTIL.format_route_policy_name
     }
 
 
@@ -76,25 +75,9 @@ def _mock_then_clean(func):
 
 
 @_mock_then_clean
-def test_apply__generate_routing_policy_config__full_config_eos(mocker):  # pylint: disable=W0613
-    """Test the entire config generation with full and valid config for eos."""
-    mocker.patch("_states.openconfig_routing_policy._get_eos_version", return_value=(4, 22))
-    fake_data, expected_result = _get_data_and_expected_result("eos")
-    assert (
-        STATE_MOD._generate_routing_policy_config(
-            fake_data["routing-policy"], fake_data["bgp"], None, saltenv="base"
-        )
-        == expected_result
-    )
-
-
-@_mock_then_clean
-def test_apply__generate_routing_policy_config__full_config_eos_before_4_22(
-    mocker,
-):  # pylint: disable=W0613
-    """Test the entire config generation with full and valid config for eos."""
-    mocker.patch("_states.openconfig_routing_policy._get_eos_version", return_value=(4, 17))
-    fake_data, expected_result = _get_data_and_expected_result("eos_before_4_22")
+def test_apply__generate_routing_policy_config__full_config_junos(mocker):  # pylint: disable=W0613
+    """Test the entire config generation with full and valid config for JunOS."""
+    fake_data, expected_result = _get_data_and_expected_result("junos")
     assert (
         STATE_MOD._generate_routing_policy_config(
             fake_data["routing-policy"], fake_data["bgp"], None, saltenv="base"

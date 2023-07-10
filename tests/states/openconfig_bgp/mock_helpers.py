@@ -3,7 +3,7 @@ import functools
 import _states.openconfig_bgp as STATE_MOD
 import _utils.jinja_filters as STATE_UTIL
 from tests.common import mock_apply_template_on_contents, mock_get_file_str
-from tests.states.openconfig_bgp.functional_tests.common_bgp_functional import mock_get_neighbors
+from tests.states.openconfig_bgp.integration_tests.common_bgp_integration import mock_get_neighbors
 
 
 def _mock_pillar_eos(*args, **__):

@@ -1,4 +1,4 @@
-"""Functional test of openconfig_routing_policy for SONiC."""
+"""integration test of openconfig_routing_policy for SONiC."""
 import functools
 import json
 
@@ -12,7 +12,7 @@ from jinja2 import BaseLoader, Environment
 
 
 def _get_data_and_expected_result(os_name):
-    test_path = "tests/states/openconfig_routing_policy/data/functional_tests"
+    test_path = "tests/states/openconfig_routing_policy/data/integration_tests"
     with open(
         f"{test_path}/openconfig.json",
         encoding="utf-8",

@@ -1,9 +1,9 @@
 import json
 
 
-def assert_expected_functional_result(scenario, os_name):
+def assert_expected_integration_result(scenario, os_name):
     """Get data and compare to expected results."""
-    test_path = "tests/states/openconfig_bgp/data/functional_tests"
+    test_path = "tests/states/openconfig_bgp/data/integration_tests"
     with open(
         f"{test_path}/{scenario}/openconfig.json",
         encoding="utf-8",

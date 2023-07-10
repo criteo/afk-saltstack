@@ -8,7 +8,7 @@ The reason for this is simple: we are working very actively on the subject, and 
 
 ## Requirements
 
-**unit and functionals tests** are mandatory.
+**unit and integrations tests** are mandatory.
 
 Please use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).
 
