@@ -6,7 +6,7 @@
 
 This repo contains our Saltstack codebase necessary to apply configuration on network devices using configuration inputs in OpenConfig.
 
-The full documentation can be found here: [AFK documentation](https://criteo.github.io/AFK/SaltStack-OpenConfig/installation/)
+The full documentation can be found here: [AFK documentation](https://criteo.github.io/AFK/SaltStack-modules/installation/)
 
 ## Be careful
 
