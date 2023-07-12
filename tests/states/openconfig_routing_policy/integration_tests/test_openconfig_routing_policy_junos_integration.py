@@ -51,7 +51,8 @@ def _apply_common_mock(mocker):
         "cp.get_file_str": _mock_get_file_str,
     }
     STATE_MOD.__utils__ = {
-        "jinja_filters.format_route_policy_name": STATE_UTIL.format_route_policy_name
+        "jinja_filters.format_route_policy_name": STATE_UTIL.format_route_policy_name,
+        "jinja_filters.deep_get": STATE_UTIL.deep_get,
     }
 
 

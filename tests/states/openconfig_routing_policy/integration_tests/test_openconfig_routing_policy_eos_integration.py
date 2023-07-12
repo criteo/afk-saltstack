@@ -53,6 +53,7 @@ def _apply_common_mock(mocker):
     STATE_MOD.__utils__ = {
         "frr_detect_diff.get_objects": frr_detect_diff.get_objects,
         "jinja_filters.format_route_policy_name": jinja_filters.format_route_policy_name,
+        "jinja_filters.deep_get": jinja_filters.deep_get,
     }
 
 
