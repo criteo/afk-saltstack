@@ -31,13 +31,13 @@ neighbor {{ neighbor["neighbor-address"] }} password 7 {{ neighbor["config"]["au
 default neighbor {{ neighbor["neighbor-address"] }} password
 {% endif %}
 
-{% if neighbor["apply-policy"]["config"]["import-policy"] %}
+{% if neighbor["apply-policy"] and neighbor["apply-policy"]["config"]["import-policy"] %}
 neighbor {{ neighbor["neighbor-address"] }} route-map {{ neighbor["apply-policy"]["config"]["import-policy"] | first }} in
 {% else %}
 default neighbor {{ neighbor["neighbor-address"] }} route-map in
 {% endif %}
 
-{% if neighbor["apply-policy"]["config"]["export-policy"] %}
+{% if neighbor["apply-policy"] and neighbor["apply-policy"]["config"]["export-policy"] %}
 neighbor {{ neighbor["neighbor-address"] }} route-map {{ neighbor["apply-policy"]["config"]["export-policy"] | first }} out
 {% else %}
 default neighbor {{ neighbor["neighbor-address"] }} route-map out

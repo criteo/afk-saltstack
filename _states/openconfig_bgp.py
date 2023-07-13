@@ -262,7 +262,7 @@ def _generate_safi_part(safi_name, params, asset, asset_type, saltenv):
     if asset_type == SafiAssetType.NEIGHBOR:
         context["neighbor"] = {
             "address": asset["neighbor-address"],
-            "peer_group": asset["config"]["peer-group"],
+            "peer_group": asset["config"].get("peer-group"),
         }
     elif asset_type == SafiAssetType.PEER_GROUP:
         context["peer_group"] = asset

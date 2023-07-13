@@ -38,6 +38,7 @@ def _safeget(dct, *keys):
 def _apply_template(template_name, context, saltenv):
     """Define a helper to generate config from template file."""
     template_content = __salt__["cp.get_file_str"](template_name, saltenv=saltenv)
+    context["deep_get"] = __utils__["jinja_filters.deep_get"]
 
     if not template_content:
         raise CommandExecutionError("Unable to get {}".format(template_name))
@@ -300,7 +301,7 @@ def _generate_statement_config(route_map_name, afisafis, statement, prefixes_set
         "afisafis": afisafis,
         "sequence": statement["name"],
         "actions": statement["actions"],
-        "conditions": statement["conditions"],
+        "conditions": statement.get("conditions"),
         "prefixes_set_mode": prefixes_set_mode,
         "convert_route_map_name": __utils__["jinja_filters.format_route_policy_name"],
     }
@@ -385,6 +386,8 @@ def _get_route_policy_afi_safis_usage(route_policies, bgp):
     route_policies_set = _get_route_policies_empty_set(route_policies["policy-definition"])
     for neighbor in bgp["neighbors"]["neighbor"]:
         for afisafi in neighbor["afi-safis"]["afi-safi"]:
+            if not afisafi.get("apply-policy"):
+                continue
             for policy_name in afisafi["apply-policy"]["config"]["import-policy"]:
                 route_policies_set[policy_name].add(afisafi["afi-safi-name"])
             for policy_name in afisafi["apply-policy"]["config"]["export-policy"]:

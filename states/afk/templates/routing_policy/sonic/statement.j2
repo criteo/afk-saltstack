@@ -41,7 +41,7 @@ route-map {{ route_map_name }} {{ ACTION[actions["config"]["policy-result"]] }} 
 
 {# Conditions #}
 
-{% if conditions["match-prefix-set"] %}
+{% if conditions and conditions["match-prefix-set"] %}
   {% set prefix_set_mode = prefixes_set_mode[conditions["match-prefix-set"]["config"].get("prefix-set")] %}
   match {{ L3_PROTOCOLS[prefix_set_mode] }} address prefix-list {{ conditions["match-prefix-set"]["config"]["prefix-set"] }}
 
@@ -52,37 +52,37 @@ route-map {{ route_map_name }} {{ ACTION[actions["config"]["policy-result"]] }} 
   {% endif %}
 {% endif %}
 
-{% if conditions["config"]["install-protocol-eq"] %}
+{% if deep_get(conditions, "config", "install-protocol-eq") %}
   match source-protocol {{ PROTOCOLS[conditions["config"]["install-protocol-eq"]] }}
 {% endif %}
 
-{% if conditions["bgp-conditions"] and conditions["bgp-conditions"]["config"].get("med-eq") %}
+{% if deep_get(conditions, "bgp-conditions", "config", "med-eq") %}
   match metric {{ conditions["bgp-conditions"]["config"]["med-eq"] }}
 {% endif %}
 
-{% if conditions["bgp-conditions"] and conditions["bgp-conditions"]["config"].get("local-pref-eq") %}
+{% if deep_get(conditions, "bgp-conditions", "config", "local-pref-eq") %}
   set local-preference {{ conditions["bgp-conditions"]["config"]["local-pref-eq"] }}
 {% endif %}
 
-{% if conditions["bgp-conditions"] and conditions["bgp-conditions"]["config"].get("community-set") %}
+{% if deep_get(conditions, "bgp-conditions", "config", "community-set") %}
   match community {{ conditions["bgp-conditions"]["config"]["community-set"] }}
 {% endif %}
 
-{% if conditions["config"]["call-policy"] %}
+{% if deep_get(conditions, "config", "call-policy") %}
   call {{ conditions["config"]["call-policy"] }}
 {% endif %}
 
 {# Actions #}
 
-{% if actions["bgp-actions"] and actions["bgp-actions"]["config"].get("set-route-origin") %}
+{% if deep_get(actions, "bgp-actions", "config", "set-route-origin") %}
   set origin {{ actions["bgp-actions"]["config"]["set-route-origin"]|lower }}
 {% endif %}
 
-{% if actions["bgp-actions"] and actions["bgp-actions"]["config"].get("set-local-pref") %}
+{% if deep_get(actions, "bgp-actions", "config", "set-local-pref") %}
   set local-preference {{ actions["bgp-actions"]["config"]["set-local-pref"] }}
 {% endif %}
 
-{% if actions["bgp-actions"] and actions["bgp-actions"]["config"].get("set-next-hop") %}
+{% if deep_get(actions, "bgp-actions", "config", "set-next-hop") %}
   {% if ":" in actions["bgp-actions"]["config"]["set-next-hop"] %}
   set ipv6 next-hop {{ actions["bgp-actions"]["config"]["set-next-hop"] }}
   {% else %}
@@ -90,16 +90,16 @@ route-map {{ route_map_name }} {{ ACTION[actions["config"]["policy-result"]] }} 
   {% endif %}
 {% endif %}
 
-{% if actions["bgp-actions"] and actions["bgp-actions"]["config"].get("set-med") %}
+{% if deep_get(actions, "bgp-actions", "config", "set-med") %}
   set metric {{ actions["bgp-actions"]["config"]["set-med"] }}
 {% endif %}
 
-{% if actions["bgp-actions"] and actions["bgp-actions"].get("set-as-path-prepend") %}
+{% if deep_get(actions, "bgp-actions", "set-as-path-prepend") %}
   {% set as_prepend_config = actions["bgp-actions"]["set-as-path-prepend"]["config"] %}
   set as-path prepend{{ (" " + as_prepend_config["asn"]|string) * as_prepend_config["repeat-n"] }}
 {% endif %}
 
-{% if actions["bgp-actions"] and actions["bgp-actions"].get("set-community") %}
+{% if deep_get(actions, "bgp-actions", "set-community") %}
   {# this one might need some python magic #}
   {# handle "set community none" and other well known communities #}
   {% if actions["bgp-actions"]["set-community"]["config"].get("method") == "INLINE" %}
