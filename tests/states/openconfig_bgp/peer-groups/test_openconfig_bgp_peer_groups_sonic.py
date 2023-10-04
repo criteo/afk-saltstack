@@ -4,47 +4,6 @@ from tests.states.openconfig_bgp.mock_helpers import salt_bgp_mock
 
 
 @salt_bgp_mock("sonic")
-def test__generate_peer_group_part__without_remote_as(mocker):
-    """Test peer-group with no remote-as.
-
-    Note: It should never happen as an opiniated choice was made to make
-    remote-as mandatory (to avoid complexity on FRR).
-    """
-    config = {
-        "peer-group-name": "RA02.01:PG-TOR",
-        "config": {
-            "local-as": None,
-            "description": "",
-        },
-        "apply-policy": {},
-        "afis-safis": {},
-    }
-    pg_config, safi_config = STATE_MOD._generate_peer_group(config, {}, None)
-
-    # we ensure the remote-as is never removed (no "no command")
-    assert pg_config == (
-        "neighbor RA02.01:PG-TOR peer-group\n"
-        "no neighbor RA02.01:PG-TOR local-as\n"
-        "no neighbor RA02.01:PG-TOR description"
-    )
-
-    assert safi_config == {
-        "IPV4_UNICAST": (
-            "no neighbor RA02.01:PG-TOR route-map * in\n"
-            "no neighbor RA02.01:PG-TOR route-map * out\n"
-            "no neighbor RA02.01:PG-TOR maximum-prefix\n"
-            "neighbor RA02.01:PG-TOR send-community"
-        ),
-        "IPV6_UNICAST": (
-            "no neighbor RA02.01:PG-TOR route-map * in\n"
-            "no neighbor RA02.01:PG-TOR route-map * out\n"
-            "no neighbor RA02.01:PG-TOR maximum-prefix\n"
-            "neighbor RA02.01:PG-TOR send-community"
-        ),
-    }
-
-
-@salt_bgp_mock("sonic")
 def test__generate_peer_group_part__minimal(mocker):
     """Test peer-group with no specific configuration."""
     config = {

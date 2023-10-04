@@ -4,7 +4,7 @@
 {% set vrf_path = "" %}
 {% endif %}
 
-{% if neighbor["config"]["peer-group"] %}
+{% if deep_get(neighbor, "config", "peer-group") %}
 {% set target_peer_group = neighbor["config"]["peer-group"] %}
 {% else %}
 {# peer_group is mandatory, so we define a default one if not set #}
@@ -13,7 +13,7 @@
 {% set path = vrf_path + " protocols bgp group " + target_peer_group %}
 
 {# Delete neighbor if peer-group is being changed #}
-{% if current_config.get(neighbor["neighbor-address"]) and current_config[neighbor["neighbor-address"]]["peer_group"] %}
+{% if deep_get(current_config, neighbor["neighbor-address"], "peer_group") %}
     {% if current_config[neighbor["neighbor-address"]]["peer_group"] != target_peer_group %}
 delete {{ vrf_path }} protocols bgp group {{ current_config[neighbor["neighbor-address"]]["peer_group"] }} neighbor {{ neighbor["neighbor-address"] }}
     {% endif %}

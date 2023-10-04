@@ -10,6 +10,7 @@ def test__generate_peer_group_part__minimal(mocker):
         "peer-group-name": "RA02.01:PG-TOR",
         "config": {
             "local-as": None,
+            "peer-as": 65000,
             "description": "",
         },
         "apply-policy": {},
@@ -18,7 +19,7 @@ def test__generate_peer_group_part__minimal(mocker):
     pg_config, safi_config = STATE_MOD._generate_peer_group(config, {}, None)
     assert pg_config == (
         "delete routing-instances prod protocols bgp group RA02.01:PG-TOR local-as\n"
-        "delete routing-instances prod protocols bgp group RA02.01:PG-TOR peer-as\n"
+        "set routing-instances prod protocols bgp group RA02.01:PG-TOR peer-as 65000\n"
         "delete routing-instances prod protocols bgp group RA02.01:PG-TOR preference\n"
         "delete routing-instances prod protocols bgp group RA02.01:PG-TOR description\n"
         "delete routing-instances prod protocols bgp group RA02.01:PG-TOR import\n"
@@ -36,7 +37,7 @@ def test__generate_peer_group_part__simple(mocker):
     """Test peer-group with simple configuration: no SAFI."""
     config = {
         "peer-group-name": "RA02.01:PG-TOR",
-        "config": {"local-as": 60000, "description": "L3_RA"},
+        "config": {"local-as": 60000, "peer-as": 60001, "description": "L3_RA"},
         "apply-policy": {
             "config": {"import-policy": ["RM-LAN-IN"], "export-policy": ["RM-LAN-OUT"]}
         },
@@ -46,8 +47,8 @@ def test__generate_peer_group_part__simple(mocker):
     pg_config, safi_config = STATE_MOD._generate_peer_group(config, {}, None)
     assert pg_config == (
         "set routing-instances prod protocols bgp group RA02.01:PG-TOR local-as 60000\n"
-        "delete routing-instances prod protocols bgp group RA02.01:PG-TOR peer-as\n"
-        "delete routing-instances prod protocols bgp group RA02.01:PG-TOR preference\n"
+        "set routing-instances prod protocols bgp group RA02.01:PG-TOR peer-as 60001\n"
+        "set routing-instances prod protocols bgp group RA02.01:PG-TOR preference 20\n"
         "set routing-instances prod protocols bgp group RA02.01:PG-TOR description \"L3_RA\"\n"
         "delete routing-instances prod protocols bgp group RA02.01:PG-TOR import\n"
         "set routing-instances prod protocols bgp group RA02.01:PG-TOR import [RM-LAN-IN]\n"

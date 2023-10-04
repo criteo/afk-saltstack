@@ -48,7 +48,8 @@ def _apply_common_mock(mocker, network_os):
         "criteo_bgp.get_neighbors": mock_get_neighbors,
     }
     STATE_MOD.__utils__ = {
-        "jinja_filters.format_route_policy_name": STATE_UTIL.format_route_policy_name
+        "jinja_filters.format_route_policy_name": STATE_UTIL.format_route_policy_name,
+        "jinja_filters.deep_get": STATE_UTIL.deep_get,
     }
 
 

@@ -1,4 +1,5 @@
 from jinja2 import BaseLoader, Environment
+from salt.utils import templates as saltTemplates
 
 
 def mock_apply_template_on_contents(contents, template, context, defaults, saltenv):

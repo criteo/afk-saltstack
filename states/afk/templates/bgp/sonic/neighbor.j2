@@ -1,21 +1,21 @@
 {% set current_peer_group = current_config.get(neighbor["neighbor-address"], {}).get("peer_group") %}
 
 {# Note: removing the remote-as of a neighbor (by removing the remote-as, or removing its peer-group) deconfigures the neighbor #}
-{% if not neighbor["config"]["peer-group"] and current_peer_group %}
+{% if not deep_get(neighbor, "config", "peer-group") and current_peer_group %}
 {# when we want to remove the peer-group #}
 no neighbor {{ neighbor["neighbor-address"] }} peer-group {{ current_peer_group }}
 
-{% elif neighbor["config"]["peer-group"] and current_peer_group and neighbor["config"]["peer-group"] != current_peer_group %}
+{% elif deep_get(neighbor, "config", "peer-group") and current_peer_group and deep_get(neighbor, "config", "peer-group") != current_peer_group %}
 {# when the neighbor exists with the wrong peer-group #}
 no neighbor {{ neighbor["neighbor-address"] }} peer-group {{ current_peer_group }}
-neighbor {{ neighbor["neighbor-address"] }} peer-group {{ neighbor["config"]["peer-group"] }}
+neighbor {{ neighbor["neighbor-address"] }} peer-group {{ deep_get(neighbor, "config", "peer-group") }}
 
-{% elif neighbor["config"]["peer-group"] %}
+{% elif deep_get(neighbor, "config", "peer-group") %}
 {# when the neighbor exists without peer group #}
-neighbor {{ neighbor["neighbor-address"] }} peer-group {{ neighbor["config"]["peer-group"] }}
+neighbor {{ neighbor["neighbor-address"] }} peer-group {{ deep_get(neighbor, "config", "peer-group") }}
 {% endif %}
 
-{% set peer_group_name = neighbor["config"]["peer-group"] %}
+{% set peer_group_name = deep_get(neighbor, "config", "peer-group") %}
 {% if not peer_group_name or not peer_groups[peer_group_name]["config"]["peer-as"] %}
 neighbor {{ neighbor["neighbor-address"] }} remote-as {{ neighbor["config"]["peer-as"] }}
 {% endif %}

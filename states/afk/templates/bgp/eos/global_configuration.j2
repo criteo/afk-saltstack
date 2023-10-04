@@ -12,7 +12,7 @@ no bgp router-id
 {% set internal_distance = distances.get("internal-route-distance", 200) %}
 distance bgp {{ distances.get("external-route-distance", 20) }} {{ internal_distance }} {{ internal_distance }}
 
-{% if config.get("graceful-restart", {}).get("config", {}).get("enabled") == True %}
+{% if deep_get(config, "graceful-restart", "config", "enabled") == True %}
 graceful-restart
   {% if config["graceful-restart"]["config"].get("restart-time") %}
 graceful-restart restart-time {{ config["graceful-restart"]["config"]["restart-time"] }}
@@ -24,7 +24,7 @@ no graceful-restart
 no graceful-restart restart-time
 {% endif %}
 
-{% if config.get("use-multiple-paths", {}).get("config", {}).get("enabled") %}
+{% if deep_get(config, "use-multiple-paths", "config", "enabled") %}
 {% set maximum_paths = config["use-multiple-paths"].get("ebgp", {}).get("config", {}).get("maximum-paths", 32) %}
 maximum-paths {{ maximum_paths }} ecmp {{ maximum_paths }}
 {% else %}
