@@ -14,13 +14,13 @@ neighbor {{ asset_name }} activate
 {% endif %}
 
 {# TODO: factorize because duplicate code with neighbor.j2 #}
-{% if safi and safi.get("apply-policy") and safi["apply-policy"]["config"]["import-policy"] %}
+{% if deep_get(safi, "apply-policy", "config", "import-policy") %}
 neighbor {{ asset_name }} route-map {{ safi["apply-policy"]["config"]["import-policy"] | first }} in
 {% else %}
 default neighbor {{ asset_name }} route-map in
 {% endif %}
 
-{% if safi and safi.get("apply-policy") and safi["apply-policy"]["config"]["export-policy"] %}
+{% if deep_get(safi, "apply-policy", "config", "export-policy") %}
 neighbor {{ asset_name }} route-map {{ safi["apply-policy"]["config"]["export-policy"] | first }} out
 {% else %}
 default neighbor {{ asset_name }} route-map out

@@ -42,7 +42,7 @@ route-map {{ route_map_name }} {{ ACTION[actions["config"]["policy-result"]] }} 
 
 {# Conditions #}
 
-{% if conditions and conditions["match-prefix-set"] %}
+  {% if deep_get(conditions, "match-prefix-set", "config") %}
   {% set prefix_set_mode = prefixes_set_mode[conditions["match-prefix-set"]["config"].get("prefix-set")] %}
   match {{ L3_PROTOCOLS[prefix_set_mode] }} address prefix-list {{ conditions["match-prefix-set"]["config"]["prefix-set"] }}
 

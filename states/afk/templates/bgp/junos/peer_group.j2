@@ -6,7 +6,7 @@
 
 {% set path = vrf_path + " protocols bgp group " + peer_group["peer-group-name"] %}
 
-{% if peer_group["config"]["local-as"] %}
+{% if deep_get(peer_group, "config", "local-as") %}
 set {{ path }} local-as {{ peer_group["config"]["local-as"] }}
 {% else %}
 delete {{ path }} local-as
@@ -19,8 +19,8 @@ delete {{ path }} peer-as
 {% endif %}
 
 {# Set an administrative distance for ebgp sessions (170 by default in JunOS) #}
-{% if peer_group["config"]["local-as"]
-    and peer_group["config"]["peer-as"]
+{% if deep_get(peer_group, "config", "local-as")
+    and deep_get(peer_group, "config", "peer-as")
     and peer_group["config"]["local-as"] != peer_group["config"]["peer-as"] %}
 set {{ path }} preference {{ bgp_distance.get("external", 20) }}
 {% elif bgp_distance.get("internal") %}
@@ -36,11 +36,11 @@ delete {{ path }} description
 {% endif %}
 
 delete {{ path }} import
-{% if peer_group["apply-policy"].get("config", {})["import-policy"] %}
+{% if deep_get(peer_group, "apply-policy", "config", "import-policy") %}
 set {{ path }} import [{{ peer_group["apply-policy"]["config"]["import-policy"] | join(" ") }}]
 {% endif %}
 
 delete {{ path }} export
-{% if peer_group["apply-policy"].get("config", {})["export-policy"] %}
+{% if deep_get(peer_group, "apply-policy", "config", "export-policy") %}
 set {{ path }} export [{{ peer_group["apply-policy"]["config"]["export-policy"] | join(" ") }}]
 {% endif %}

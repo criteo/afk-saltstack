@@ -11,6 +11,7 @@ def test__generate_peer_group_part__minimal_before_4_22(mocker):
         "peer-group-name": "RA02.01:PG-TOR",
         "config": {
             "local-as": None,
+            "peer-as": 65000,
             "description": "",
         },
         "apply-policy": {},
@@ -22,7 +23,7 @@ def test__generate_peer_group_part__minimal_before_4_22(mocker):
     assert pg_config == (
         "neighbor RA02.01:PG-TOR peer-group\n"
         "default neighbor RA02.01:PG-TOR local-as\n"
-        "default neighbor RA02.01:PG-TOR remote-as\n"
+        "neighbor RA02.01:PG-TOR remote-as 65000\n"
         "default neighbor RA02.01:PG-TOR description\n"
         "default neighbor RA02.01:PG-TOR route-map in\n"
         "default neighbor RA02.01:PG-TOR route-map out\n"
@@ -48,6 +49,7 @@ def test__generate_peer_group_part__minimal(mocker):
         "peer-group-name": "RA02.01:PG-TOR",
         "config": {
             "local-as": None,
+            "peer-as": 65000,
             "description": "",
         },
         "apply-policy": {},
@@ -59,7 +61,7 @@ def test__generate_peer_group_part__minimal(mocker):
     assert pg_config == (
         "neighbor RA02.01:PG-TOR peer group\n"
         "default neighbor RA02.01:PG-TOR local-as\n"
-        "default neighbor RA02.01:PG-TOR remote-as\n"
+        "neighbor RA02.01:PG-TOR remote-as 65000\n"
         "default neighbor RA02.01:PG-TOR description\n"
         "default neighbor RA02.01:PG-TOR route-map in\n"
         "default neighbor RA02.01:PG-TOR route-map out\n"
@@ -84,7 +86,7 @@ def test__generate_peer_group_part__simple(mocker):
     """Test peer-group with simple configuration: no SAFI."""
     config = {
         "peer-group-name": "RA02.01:PG-TOR",
-        "config": {"local-as": 60000, "description": "L3_RA"},
+        "config": {"local-as": 60000, "peer-as": 65000, "description": "L3_RA"},
         "apply-policy": {
             "config": {"import-policy": ["RM-LAN-IN"], "export-policy": ["RM-LAN-OUT"]}
         },
@@ -96,7 +98,7 @@ def test__generate_peer_group_part__simple(mocker):
     assert pg_config == (
         "neighbor RA02.01:PG-TOR peer group\n"
         "neighbor RA02.01:PG-TOR local-as 60000\n"
-        "default neighbor RA02.01:PG-TOR remote-as\n"
+        "neighbor RA02.01:PG-TOR remote-as 65000\n"
         "neighbor RA02.01:PG-TOR description L3_RA\n"
         "neighbor RA02.01:PG-TOR route-map RM-LAN-IN in\n"
         "neighbor RA02.01:PG-TOR route-map RM-LAN-OUT out\n"

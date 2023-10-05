@@ -4,7 +4,7 @@
     {% set asset_name = peer_group["peer-group-name"] %}
 {% endif %}
 
-{% if safi and safi.get("apply-policy") and safi["apply-policy"]["config"]["import-policy"] %}
+{% if deep_get(safi, "apply-policy", "config", "import-policy") %}
 neighbor {{ asset_name }} route-map {{ safi["apply-policy"]["config"]["import-policy"] | first }} in
 {# For a peer-group, we set the route-map whether the SAFI is enabled or not #}
 {# because a peer can be in a SAFI while its peer-group is not, in that case, we need the route-map of the peer-group #}
@@ -16,7 +16,7 @@ neighbor {{ asset_name }} route-map {{ global_route_map["import"] | first }} in
 no neighbor {{ asset_name }} route-map * in
 {% endif %}
 
-{% if safi and safi.get("apply-policy") and safi["apply-policy"]["config"]["export-policy"] %}
+{% if deep_get(safi, "apply-policy", "config", "export-policy") %}
 neighbor {{ asset_name }} route-map {{ safi["apply-policy"]["config"]["export-policy"] | first }} out
 {# For a peer-group, we set the route-map whether the SAFI is enabled or not #}
 {# because a peer can be in a SAFI while its peer-group is not, in that case, we need the route-map of the peer-group #}
@@ -28,7 +28,7 @@ neighbor {{ asset_name }} route-map {{ global_route_map["export"] | first }} out
 no neighbor {{ asset_name }} route-map * out
 {% endif %}
 
-{% if not safi or not safi.get(safi_key, {}).get("prefix-limit", {}).get("config", {}) %}
+{% if not deep_get(safi, safi_key, "prefix-limit", "config") %}
 no neighbor {{ asset_name }} maximum-prefix
 {% elif safi[safi_key]["prefix-limit"]["config"]["max-prefixes"] == 0 %}
 no neighbor {{ asset_name }} maximum-prefix

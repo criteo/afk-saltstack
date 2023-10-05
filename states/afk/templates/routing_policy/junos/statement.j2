@@ -56,7 +56,7 @@
 set {{ set_from }} family {{ MAPPING_AFISAFI_FAMILY[afisafi] }}
   {% endif %}
 
-  {% if conditions and conditions["match-prefix-set"] %}
+  {% if deep_get(conditions, "match-prefix-set", "config") %}
 set {{ set_from }} route-filter-list {{ conditions["match-prefix-set"]["config"]["prefix-set"] }}
     {# Hardcoded to be ISO with SONiC template. TODO: remove once we have SONiC migrated to >= 202111 #}
     {% if route_map_name == "RM-CLOS-IN" and sequence == "10" and conditions["match-prefix-set"]["config"]["prefix-set"] == "PF-ANY_IPV6" %}

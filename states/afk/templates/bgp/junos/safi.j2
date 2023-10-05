@@ -22,7 +22,7 @@
 delete {{ path }} family {{ safi_name }}
 {% else %}
 set {{ path }} family {{ safi_name }}
-    {% if not safi or not safi.get(safi_key, {}).get("prefix-limit", {}).get("config", {}) %}
+    {% if not deep_get(safi, safi_key, "prefix-limit", "config") %}
 delete {{ path }} family {{ safi_name }} prefix-limit
     {% elif safi[safi_key]["prefix-limit"]["config"]["max-prefixes"] == 0 %}
 delete {{ path }} family {{ safi_name }} prefix-limit
@@ -35,7 +35,7 @@ set {{ path }} family {{ safi_name }} prefix-limit maximum {{ safi[safi_key]["pr
 
 {% for direction in ["import", "export"] %}
 {% set policy = direction ~ "-policy" %}
-    {% if safi and safi.get("apply-policy") and safi["apply-policy"]["config"][policy] %}
+    {% if deep_get(safi, "apply-policy", "config", policy) %}
     {% set policies_name_list = [] %}
         {% for policy_name in safi["apply-policy"]["config"][policy] %}
         {% set policies_name_list = policies_name_list.append(convert_route_map_name(policy_name, safi["afi-safi-name"])) %}

@@ -7,7 +7,7 @@
 
     {% set path = path + " protocols bgp" %}
 
-    {% if neighbor["peer_group"] %}
+    {% if neighbor.get("peer_group") %}
     {% set path = path + " group " + neighbor["peer_group"] %}
     {% endif %}
 

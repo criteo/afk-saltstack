@@ -59,6 +59,7 @@ def _get_os():
 def _apply_template(template_name, context, saltenv):
     """Define a helper to generate config from template file."""
     template_content = __salt__["cp.get_file_str"](template_name, saltenv=saltenv)
+    context["deep_get"] = __utils__["jinja_filters.deep_get"]
 
     if not template_content:
         raise CommandExecutionError("Unable to get {}".format(template_name))

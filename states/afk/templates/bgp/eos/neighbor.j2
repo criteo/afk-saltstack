@@ -13,7 +13,7 @@ default neighbor {{ neighbor["neighbor-address"] }} shutdown
 neighbor {{ neighbor["neighbor-address"] }} shutdown
 {% endif %}
 
-{% if neighbor["config"]["peer-group"] %}
+{% if deep_get(neighbor, "config", "peer-group") %}
 neighbor {{ neighbor["neighbor-address"] }} peer-group {{ neighbor["config"]["peer-group"] }}
 {% else %}
 default neighbor {{ neighbor["neighbor-address"] }} peer-group
@@ -31,13 +31,13 @@ neighbor {{ neighbor["neighbor-address"] }} password 7 {{ neighbor["config"]["au
 default neighbor {{ neighbor["neighbor-address"] }} password
 {% endif %}
 
-{% if neighbor["apply-policy"] and neighbor["apply-policy"]["config"]["import-policy"] %}
+{% if deep_get(neighbor, "apply-policy", "config", "import-policy") %}
 neighbor {{ neighbor["neighbor-address"] }} route-map {{ neighbor["apply-policy"]["config"]["import-policy"] | first }} in
 {% else %}
 default neighbor {{ neighbor["neighbor-address"] }} route-map in
 {% endif %}
 
-{% if neighbor["apply-policy"] and neighbor["apply-policy"]["config"]["export-policy"] %}
+{% if deep_get(neighbor, "apply-policy", "config", "export-policy") %}
 neighbor {{ neighbor["neighbor-address"] }} route-map {{ neighbor["apply-policy"]["config"]["export-policy"] | first }} out
 {% else %}
 default neighbor {{ neighbor["neighbor-address"] }} route-map out
