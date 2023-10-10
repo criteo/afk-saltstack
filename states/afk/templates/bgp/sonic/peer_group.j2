@@ -6,7 +6,7 @@ neighbor {{ peer_group["peer-group-name"] }} local-as {{ peer_group["config"]["l
 no neighbor {{ peer_group["peer-group-name"] }} local-as
 {% endif %}
 
-{% if peer_group["config"]["peer-as"] %}
+{% if deep_get(peer_group, "config", "peer-as") %}
 neighbor {{ peer_group["peer-group-name"] }} remote-as {{ peer_group["config"]["peer-as"] }}
 {% endif %}
 
