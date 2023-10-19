@@ -1,4 +1,4 @@
-bgp route-map delay-timer 300
+bgp route-map delay-timer 0
 !
 bgp community-list expanded CL-LOCAL permit 65000:100.
 bgp community-list expanded CL-MAIN permit 649..:20000
