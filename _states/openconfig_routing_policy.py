@@ -388,9 +388,9 @@ def _get_route_policy_afi_safis_usage(route_policies, bgp):
         for afisafi in neighbor["afi-safis"]["afi-safi"]:
             if not afisafi.get("apply-policy"):
                 continue
-            for policy_name in afisafi["apply-policy"]["config"]["import-policy"]:
+            for policy_name in afisafi["apply-policy"]["config"].get("import-policy", []):
                 route_policies_set[policy_name].add(afisafi["afi-safi-name"])
-            for policy_name in afisafi["apply-policy"]["config"]["export-policy"]:
+            for policy_name in afisafi["apply-policy"]["config"].get("export-policy", []):
                 route_policies_set[policy_name].add(afisafi["afi-safi-name"])
     return route_policies_set
 

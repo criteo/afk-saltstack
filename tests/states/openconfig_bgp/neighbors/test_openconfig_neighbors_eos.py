@@ -27,10 +27,10 @@ def test__generate_neighbor_part__minimal_ipv4_up(mocker):
                 {
                     "afi-safi-name": "IPV4_UNICAST",
                     "config": {"afi-safi-name": "IPV4_UNICAST", "enabled": True},
-                    "apply-policy": {"config": {"import-policy": [], "export-policy": []}},
+                    "apply-policy": {"config": {"import-policy": []}},
                     "ipv4-unicast": {"prefix-limit": {"config": {"max-prefixes": 0}}},
                 }
-            ]
+            ],
         },
     }
 
