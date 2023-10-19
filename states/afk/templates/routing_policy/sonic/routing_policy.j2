@@ -1,5 +1,5 @@
 {# prevent route-map to be applied immediately (still applied after a clear or BGP update/reset) #}
-bgp route-map delay-timer 0
+bgp route-map delay-timer 300
 !
 {% for community in community_sets %}
 {{ community }}
