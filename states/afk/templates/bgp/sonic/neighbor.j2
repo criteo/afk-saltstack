@@ -16,7 +16,7 @@ neighbor {{ neighbor["neighbor-address"] }} peer-group {{ deep_get(neighbor, "co
 {% endif %}
 
 {% set peer_group_name = deep_get(neighbor, "config", "peer-group") %}
-{% if not peer_group_name or not peer_groups[peer_group_name]["config"]["peer-as"] %}
+{% if not peer_group_name or not peer_groups[peer_group_name]["config"].get("peer-as") %}
 neighbor {{ neighbor["neighbor-address"] }} remote-as {{ neighbor["config"]["peer-as"] }}
 {% endif %}
 
