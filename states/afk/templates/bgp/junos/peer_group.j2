@@ -12,7 +12,7 @@ set {{ path }} local-as {{ peer_group["config"]["local-as"] }}
 delete {{ path }} local-as
 {% endif %}
 
-{% if peer_group["config"]["peer-as"] %}
+{% if peer_group["config"].get("peer-as") %}
 set {{ path }} peer-as {{ peer_group["config"]["peer-as"] }}
 {% else %}
 delete {{ path }} peer-as
