@@ -4,6 +4,7 @@
 :maturity:   new
 :platform:   SONiC, Arista EOS, Juniper JunOS
 """
+
 import json
 from ipaddress import ip_address, ip_interface
 

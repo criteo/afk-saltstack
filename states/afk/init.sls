@@ -10,3 +10,9 @@ bgp_sessions:
         - require:
             - openconfig_routing_policy: route_policies
         - saltenv: {{ saltenv }}
+
+clear_bgp_soft:
+    afk_bgp.clear_soft_all:
+        - onchanges:
+            - openconfig_bgp: bgp_sessions
+            - openconfig_routing_policy: route_policies
