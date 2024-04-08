@@ -13,6 +13,7 @@ This module will be removed when FRR developers will finish the development of N
 :maturity:   new
 :platform:   SONiC,FRR
 """
+
 import re
 from collections import defaultdict
 

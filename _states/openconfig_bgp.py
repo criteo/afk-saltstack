@@ -4,6 +4,7 @@
 :maturity:   new
 :platform:   SONiC, Arista EOS, Juniper JunOS
 """
+
 import logging
 import re
 from collections import defaultdict
@@ -521,7 +522,7 @@ def apply(name, openconfig=None, remove_extras=False, rules=None, saltenv="base"
     :param remove_extras: remove unwanted installed BGP sessions
     :param saltenv: salt environment
     """
-    ret = {"name": name, "result": False, "changes": {}, "comment": ""}
+    ret = {"name": name, "result": False, "changes": {}, "comment": []}
 
     # generate command to apply on the device using the templates
     log.debug("%s starting", name)
@@ -530,7 +531,6 @@ def apply(name, openconfig=None, remove_extras=False, rules=None, saltenv="base"
     # only return generated commands/config during tests
     # there is an ongoing bug with napalm making dry-run really applying the config sometimes
     if __opts__["test"]:
-        ret["changes"] = {"gen": config}
         ret["result"] = None
         return ret
 
@@ -543,7 +543,6 @@ def apply(name, openconfig=None, remove_extras=False, rules=None, saltenv="base"
             debug=True,
         )
     elif nos == "sonic":
-        # TODO: modify .managed to support pushing raw config without template
         res = __salt__["sonic.bgp_config"](
             template_name="salt://templates/dummy.j2",
             context={"raw": config},
@@ -551,8 +550,10 @@ def apply(name, openconfig=None, remove_extras=False, rules=None, saltenv="base"
         )
         res["diff"] = res["changes"]
 
-    ret["comment"] = res["comment"]
-    ret["changes"] = {"diff": res["diff"], "loaded": config}
+    ret["comment"].append("- loaded:\n{}".format(config))
+    ret["comment"].append(res["comment"])
+    if res["diff"]:
+        ret["changes"] = {"diff": res["diff"]}
     ret["result"] = res["result"]
 
     return ret

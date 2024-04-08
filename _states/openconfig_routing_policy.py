@@ -4,6 +4,7 @@
 :maturity:   new
 :platform:   SONiC, Arista EOS, Juniper JunOS
 """
+
 import logging
 import re
 
@@ -470,7 +471,7 @@ def apply(name, openconfig_routing_policy=None, openconfig_bgp=None, saltenv="ba
     :param openconfig_bgp: BGP configuration in JSON in openconfig (bgp)
     :param saltenv: salt environment
     """
-    ret = {"name": name, "result": False, "changes": {}, "comment": ""}
+    ret = {"name": name, "result": False, "changes": {}, "comment": []}
 
     # generate command to apply on the device using the templates
     log.debug("%s starting", name)
@@ -486,7 +487,6 @@ def apply(name, openconfig_routing_policy=None, openconfig_bgp=None, saltenv="ba
         # only return generated commands/config during tests
         # there is an ongoing bug with napalm making dry-run really applying the config sometimes
         if __opts__["test"]:
-            ret["changes"] = {"gen": config}
             ret["result"] = None
             return ret
 
@@ -505,8 +505,10 @@ def apply(name, openconfig_routing_policy=None, openconfig_bgp=None, saltenv="ba
         )
         res["diff"] = res["changes"]
 
-    ret["comment"] = res["comment"]
-    ret["changes"] = {"diff": res["diff"], "loaded": config}
+    ret["comment"].append("- loaded:\n{}".format(config))
+    ret["comment"].append(res["comment"])
+    if res["diff"]:
+        ret["changes"] = {"diff": res["diff"]}
     ret["result"] = res["result"]
 
     return ret
