@@ -1,0 +1,4 @@
+snmp_rocommunity: communityro
+snmp_rocommunity: communityro2
+snmp_location: DC1;01.00
+snmp_contact: prod-network

@@ -11,6 +11,11 @@ bgp_sessions:
             - openconfig_routing_policy: route_policies
         - saltenv: {{ saltenv }}
 
+snmp_config:
+    ietf_snmp.apply:
+        - ietf_config:  {{ pillar["ietf"] | yaml }}
+        - saltenv: {{ saltenv }}
+
 clear_bgp_soft:
     afk_bgp.clear_soft_all:
         - onchanges:

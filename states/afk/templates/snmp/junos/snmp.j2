@@ -1,0 +1,15 @@
+snmp {
+    location "{{ system.location }}";
+    contact "{{ system.contact }}";
+{% for community in snmp.community %}
+{% if community['security-name'] == "readonly" %}
+    community {{ community['text-name'] }} {
+        authorization read-only;
+    }
+{% elif community['security-name'] == "readwrite" %}
+    community {{ community['text-name'] }} {
+        authorization read-write;
+    }
+{%- endif %}
+{%- endfor %}
+}

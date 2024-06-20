@@ -1,0 +1,13 @@
+snmp {
+    location "DC1;01.00";
+    contact "prod-network";
+    community communityro {
+        authorization read-only;
+    }
+    community communityro2 {
+        authorization read-only;
+    }
+    community communityrw {
+        authorization read-write;
+    }
+}

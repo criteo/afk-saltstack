@@ -1,0 +1,25 @@
+{
+    "snmp":{
+       "community":[
+          {
+             "index":"global_ro",
+             "security-name":"readonly",
+             "text-name":"communityro"
+          },
+          {
+            "index":"global_ro_n2",
+            "security-name":"readonly",
+            "text-name":"communityro2"
+         },          
+          {
+             "index":"globalrw",
+             "security-name":"readwrite",
+             "text-name":"communityrw"
+          }
+       ]
+    },
+    "system":{
+       "contact":"prod-network",
+       "location":"DC1;01.00"
+    }
+ }

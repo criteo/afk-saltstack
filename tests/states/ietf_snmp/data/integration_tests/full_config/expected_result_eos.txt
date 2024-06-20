@@ -1,0 +1,5 @@
+snmp-server contact prod-network
+snmp-server location DC1;01.00
+snmp-server community communityro ro
+snmp-server community communityro2 ro
+snmp-server community communityrw rw
