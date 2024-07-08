@@ -1,0 +1,7 @@
+{%- for community in snmp.community %}
+{%- if community['security-name'] == "readonly" %}
+snmp_rocommunity: {{ community['text-name'] }}
+{%- endif %}
+{%- endfor %}
+snmp_location: {{ system.location }}
+snmp_contact: {{ system.contact }}
