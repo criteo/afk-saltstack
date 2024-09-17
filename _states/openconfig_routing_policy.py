@@ -313,10 +313,11 @@ def _generate_statement_config(route_map_name, afisafis, statement, prefixes_set
     )
 
 
-def _remove_route_policy_config(route_map_name, saltenv):
+def _remove_route_policy_config(route_map_name, afisafis, saltenv):
     """Remove route policy configuration."""
     context = {
         "route_map_name": route_map_name,
+        "afisafis": afisafis,
         "convert_route_map_name": __utils__["jinja_filters.format_route_policy_name"],
     }
 
@@ -335,9 +336,15 @@ def _generate_policies_config(
     config = []
 
     for policies in openconfig["policy-definition"]:
+        policy_name = policies["config"]["name"]
+
         # remove the route-map to ensure no extra config nor sequence
         if _get_os() != "sonic" or policies["config"]["name"] in existing_route_maps:
-            config.append(_remove_route_policy_config(policies["config"]["name"], saltenv))
+            config.append(
+                _remove_route_policy_config(
+                    policies["config"]["name"], rp_afisafis_mapping.get(policy_name), saltenv
+                )
+            )
 
         for statement in policies["statements"]["statement"]:
             prefix_set_name = _safeget(
@@ -354,7 +361,6 @@ def _generate_policies_config(
             ):
                 raise ValueError("Declared community does not exist: {}".format(community_set_name))
 
-            policy_name = policies["config"]["name"]
             policy_config = _generate_statement_config(
                 policy_name,
                 rp_afisafis_mapping.get(policy_name),
@@ -402,10 +408,7 @@ def _get_route_policy_afi_safis_usage(route_policies, bgp):
 
 
 def _generate_routing_policy_config(openconfig_routing_policy, openconfig_bgp, _, saltenv):
-    # TODO: handle when no data
-    # TODO: add safeguards
-    # TODO: generalize this to all OS to be able to remove extra objects)
-    #   Removing extras is only support for SONiC for now
+    #   Removing extras is only supported for SONiC
     #   extract items from the config (prefix list, community list etc...)
     #   it will be used in templates to clean objects needing changes
     existing_assets = {}
