@@ -1,13 +1,5 @@
-{% set AFISAFIS = [
-  "",
-  "IPV4_UNICAST",
-  "IPV6_UNICAST",
-  "L2VPN_EVPN"
-]
-%}
-
-{% for afisafi in AFISAFIS %}
-  {% set auto_gen_rm_name = convert_route_map_name(route_map_name, afisafi) %}
 {# Explicitly remove all route policies on the AFI/SAFIS we use #}
+{% for afisafi in afisafis %}
+  {% set auto_gen_rm_name = convert_route_map_name(route_map_name, afisafi) %}
 delete policy-options policy-statement {{ auto_gen_rm_name }}
 {% endfor %}
