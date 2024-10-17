@@ -1,0 +1,21 @@
+{# in FRR 8.2.2 (SONiC 202205 and 202211), a bug appeared where prefix-list changes were never applied. #}
+{# The workaround is to apply this outside of bgp route-map delay-timer changes. #}
+{# It has been fixed starting FRR 8.4.4 (SONiC >= 202311) #}
+{# fixed by: https://github.com/FRRouting/frr/pull/13124 #}
+{# issue coming from: https://github.com/FRRouting/frr/issues/13125 #}
+{% for community in community_sets %}
+{{ community }}
+{% endfor %}
+!
+{% for prefix in prefix_sets %}
+{{ prefix | trim }}
+{% endfor %}
+!
+{# prevent route-map to be applied immediately (still applied after a clear or BGP update/reset) #}
+bgp route-map delay-timer 0
+!
+{% for policy_definitions in policy_definitions %}
+{{ policy_definitions }}
+!
+{% endfor %}
+no bgp route-map delay-timer

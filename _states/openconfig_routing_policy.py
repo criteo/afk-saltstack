@@ -448,9 +448,18 @@ def _generate_routing_policy_config(openconfig_routing_policy, openconfig_bgp, _
         "policy_definitions": policy_definitions,
     }
 
+    suffix = ""
     nos = _get_os()
+    if nos == "sonic":
+        version = __salt__["grains.get"]("sonic_build_version")
+
+        frr822 = "202205" in version or "202211" in version
+        workaround_flag = __salt__["pillar.get"]("frr822_workaround_flag", "False") == "True"
+        if frr822 and workaround_flag:
+            suffix = "_8_2_2"
+
     config = _apply_template(
-        "salt://states/afk/templates/routing_policy/{}/routing_policy.j2".format(nos),
+        "salt://states/afk/templates/routing_policy/{}/routing_policy{}.j2".format(nos, suffix),
         context,
         saltenv,
     )
