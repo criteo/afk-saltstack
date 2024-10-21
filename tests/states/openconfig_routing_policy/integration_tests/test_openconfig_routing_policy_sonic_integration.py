@@ -49,6 +49,8 @@ def _apply_common_mock(mocker):
         "file.apply_template_on_contents": _mock_apply_template_on_contents,
         "cp.get_file_str": _mock_get_file_str,
         "sonic.get_bgp_config": lambda *_: (""),
+        "grains.get": lambda name, *_: "201911" if name == "sonic_build_version" else None,
+        "pillar.get": lambda name, *_: "False" if name == "frr822_workaround_flag" else None,
     }
     STATE_MOD.__utils__ = {
         "frr_detect_diff.get_objects": frr_detect_diff.get_objects,
