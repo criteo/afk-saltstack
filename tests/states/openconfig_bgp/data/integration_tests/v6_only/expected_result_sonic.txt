@@ -4,12 +4,14 @@ router bgp 65000
     neighbor 2001:db8::101 local-as 65501
     neighbor 2001:db8::101 description to:tor1.dc6
     no neighbor 2001:db8::101 password
+    no neighbor 2001:db8::101 timers delayopen
     no neighbor 2001:db8::101 shutdown
     !
     neighbor 2001:db8::102 remote-as 65002
     neighbor 2001:db8::102 local-as 65501
     neighbor 2001:db8::102 description to:tor2.dc6
     no neighbor 2001:db8::102 password
+    no neighbor 2001:db8::102 timers delayopen
     no neighbor 2001:db8::102 shutdown
     !
     address-family ipv4 unicast
