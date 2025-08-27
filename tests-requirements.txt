@@ -10,5 +10,23 @@ pyflakes==2.4.0
 pytest
 pytest-benchmark
 pytest-mock
-salt<3007
+salt==3004.2
 tox
+
+# pin salt==3004.2 dependencies, as pip install salt does not install deps anymore
+certifi==2025.1.31
+charset-normalizer==3.4.1
+contextvars==2.4
+distro==1.9.0
+idna==3.10
+immutables==0.21
+Jinja2==3.1.6
+MarkupSafe==3.0.2
+msgpack==1.1.0
+pip==22.0.4
+psutil==7.0.0
+pycryptodomex==3.22.0
+PyYAML==6.0.2
+pyzmq==21.0.2
+requests==2.32.3
+urllib3==2.3.0
