@@ -28,5 +28,5 @@ psutil==7.0.0
 pycryptodomex==3.22.0
 PyYAML==6.0.2
 pyzmq==21.0.2
-requests==2.32.3
+requests==2.32.4
 urllib3==2.3.0
