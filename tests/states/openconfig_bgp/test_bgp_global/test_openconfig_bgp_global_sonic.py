@@ -84,3 +84,52 @@ def test__generate_global_configuration_full(mocker):
         "  maximum-paths 128\n"
         "  maximum-paths ibgp 128"
     )
+
+
+@salt_bgp_mock("sonic")
+def test__generate_global_configuration_aggregates_and_networks(mocker):
+    config = {
+        "config": {"as": 65000, "router-id": "127.0.0.1"},
+        "default-route-distance": {
+            "config": {"external-route-distance": 20, "internal-route-distance": 170}
+        },
+        "afi_safis": [
+            {
+                "id": 1,
+                "afi_safi_name": "ipv4-unicast",
+                "aggregates": [{"id": 1, "prefix": "10.0.8.0/24"}],
+                "redistributed_networks": [
+                    {"id": 1, "prefix": "10.0.8.0/24"},
+                    {"id": 2, "prefix": "10.0.1.0/31"},
+                ],
+            }
+        ],
+        "graceful-restart": {"config": {"enabled": True, "restart-time": 240}},
+        "use-multiple-paths": {
+            "config": {"enabled": True},
+            "ebgp": {"config": {"maximum-paths": 128}},
+            "ibgp": {"config": {"maximum-paths": 128}},
+        },
+    }
+
+    assert STATE_MOD._generate_global_conf_part(config, None) == (
+        "bgp log-neighbor-changes\n"
+        "bgp bestpath as-path multipath-relax\n"
+        "bgp router-id 127.0.0.1\n"
+        "distance bgp 20 170 170\n"
+        "bgp graceful-restart\n"
+        "bgp graceful-restart preserve-fw-state\n"
+        "bgp graceful-restart restart-time 240\n"
+        "address-family ipv4 unicast\n"
+        "  maximum-paths 128\n"
+        "  maximum-paths ibgp 128\n"
+        "!\n"
+        "address-family ipv6 unicast\n"
+        "  maximum-paths 128\n"
+        "  maximum-paths ibgp 128\n"
+        "!\n"
+        "address-family ipv4 unicast\n"
+        "  aggregate-address 10.0.8.0/24\n"
+        "  network 10.0.8.0/24\n"
+        "  network 10.0.1.0/31"
+    )

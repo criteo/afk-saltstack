@@ -45,3 +45,36 @@ address-family ipv6 unicast
   no maximum-paths
   no maximum-paths ibgp
 {% endif %}
+
+{% set aggregates = deep_get(global_safi_configs, "ipv4-unicast", "aggregates") %}
+{% set networks = deep_get(global_safi_configs, "ipv4-unicast", "redistributed_networks") %}
+{% if aggregates and networks %}
+!
+address-family ipv4 unicast
+  {% if aggregates %}
+    {% for prefix in aggregates %}
+  aggregate-address {{ prefix.prefix }}
+    {% endfor %}
+  {% endif %}
+  {% if networks %}
+    {% for prefix in networks %}
+  network {{ prefix.prefix }}
+    {% endfor %}
+  {% endif %}
+{% endif %}
+{% set aggregates = deep_get(global_safi_configs, "ipv6-unicast", "aggregates") %}
+{% set networks = deep_get(global_safi_configs, "ipv6-unicast", "redistributed_networks") %}
+{% if aggregates and networks %}
+!
+address-family ipv4 unicast
+  {% if aggregates %}
+    {% for prefix in aggregates %}
+  aggregate-address {{ prefix.prefix }}
+    {% endfor %}
+  {% endif %}
+  {% if networks %}
+    {% for prefix in networks %}
+  network {{ prefix.prefix }}
+    {% endfor %}
+  {% endif %}
+{% endif %}

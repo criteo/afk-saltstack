@@ -14,24 +14,28 @@ router bgp 65000
     neighbor 192.0.2.1 local-as 65501
     neighbor 192.0.2.1 description to:tor1.dc6
     no neighbor 192.0.2.1 password
+    no neighbor 192.0.2.1 timers delayopen
     no neighbor 192.0.2.1 shutdown
     !
     neighbor 192.0.2.2 peer-group RA02.01:PG-TOR
     neighbor 192.0.2.2 local-as 65501
     neighbor 192.0.2.2 description to:tor2.dc6
     no neighbor 192.0.2.2 password
+    no neighbor 192.0.2.2 timers delayopen
     no neighbor 192.0.2.2 shutdown
     !
     neighbor 2001:db8::101 peer-group RA02.01:PG-TOR
     neighbor 2001:db8::101 local-as 65501
     neighbor 2001:db8::101 description to:tor1.dc6
     no neighbor 2001:db8::101 password
+    no neighbor 2001:db8::101 timers delayopen
     no neighbor 2001:db8::101 shutdown
     !
     neighbor 2001:db8::102 peer-group RA02.01:PG-TOR
     neighbor 2001:db8::102 local-as 65501
     neighbor 2001:db8::102 description to:tor2.dc6
     no neighbor 2001:db8::102 password
+    no neighbor 2001:db8::102 timers delayopen
     no neighbor 2001:db8::102 shutdown
     !
     address-family ipv4 unicast

@@ -81,16 +81,36 @@ def _apply_template(template_name, context, saltenv):
 ##
 
 
+def _global_safi_to_dict(openconfig_global):
+    # Converts global SAFI config from list to dict, for easier usage in templates.
+    #
+    # from: "afi_safis": [ { "id": 1, "afi_safi_name": "ipv4-unicast", "aggregates": [ {...} ]...
+    # to: "ipv4-unicast": { "id": 1, "afi_safi_name": "ipv4-unicast", "aggregates": [ {...} ]... }
+    global_safi_configs = {}
+
+    for _safi in openconfig_global.get("afi_safis", {}):
+        safi_name = _safi["afi_safi_name"]
+        if safi_name not in ["ipv4-unicast", "ipv6-unicast"]:
+            raise NotImplementedError("unknown SAFI {}".format(safi_name))
+
+        global_safi_configs[safi_name] = _safi
+
+    return global_safi_configs
+
+
 def _generate_global_conf_part(config, saltenv):
     """Generate global configuration part."""
     if not config:
         return ""
+
+    global_safi_configs = _global_safi_to_dict(config)
 
     nos = _get_os()
     default_vrf = __salt__["pillar.get"]("vrf", {}).get("default", "")
 
     context = {
         "config": config,
+        "global_safi_configs": global_safi_configs,
         "vrf": default_vrf,  # TODO: add VRF support
     }
 
