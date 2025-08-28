@@ -93,17 +93,18 @@ def test__generate_global_configuration_aggregates_and_networks(mocker):
         "default-route-distance": {
             "config": {"external-route-distance": 20, "internal-route-distance": 170}
         },
-        "afi_safis": [
-            {
-                "id": 1,
-                "afi_safi_name": "ipv4-unicast",
-                "aggregates": [{"id": 1, "prefix": "10.0.8.0/24"}],
-                "redistributed_networks": [
-                    {"id": 1, "prefix": "10.0.8.0/24"},
-                    {"id": 2, "prefix": "10.0.1.0/31"},
-                ],
-            }
-        ],
+        "afi-safis": {
+            "afi-safi": [
+                {
+                    "afi-safi-name": "IPV4_UNICAST",
+                    "config": {
+                        "afi-safi-name": "IPV4_UNICAST",
+                        "aggregates": ["10.0.8.0/24"],
+                        "redistributed-networks": ["10.0.8.0/24", "10.0.1.0/31"],
+                    },
+                }
+            ]
+        },
         "graceful-restart": {"config": {"enabled": True, "restart-time": 240}},
         "use-multiple-paths": {
             "config": {"enabled": True},

@@ -46,35 +46,35 @@ address-family ipv6 unicast
   no maximum-paths ibgp
 {% endif %}
 
-{% set aggregates = deep_get(global_safi_configs, "ipv4-unicast", "aggregates") %}
-{% set networks = deep_get(global_safi_configs, "ipv4-unicast", "redistributed_networks") %}
-{% if aggregates and networks %}
+{% set aggregates = deep_get(global_safi_configs, "IPV4_UNICAST", "config", "aggregates") %}
+{% set networks = deep_get(global_safi_configs, "IPV4_UNICAST", "config", "redistributed-networks") %}
+{% if aggregates or networks %}
 !
 address-family ipv4 unicast
   {% if aggregates %}
     {% for prefix in aggregates %}
-  aggregate-address {{ prefix.prefix }}
+  aggregate-address {{ prefix }}
     {% endfor %}
   {% endif %}
   {% if networks %}
     {% for prefix in networks %}
-  network {{ prefix.prefix }}
+  network {{ prefix }}
     {% endfor %}
   {% endif %}
 {% endif %}
-{% set aggregates = deep_get(global_safi_configs, "ipv6-unicast", "aggregates") %}
-{% set networks = deep_get(global_safi_configs, "ipv6-unicast", "redistributed_networks") %}
-{% if aggregates and networks %}
+{% set aggregates = deep_get(global_safi_configs, "IPV6_UNICAST", "config", "aggregates") %}
+{% set networks = deep_get(global_safi_configs, "IPV6_UNICAST", "config", "redistributed-networks") %}
+{% if aggregates or networks %}
 !
-address-family ipv4 unicast
+address-family ipv6 unicast
   {% if aggregates %}
     {% for prefix in aggregates %}
-  aggregate-address {{ prefix.prefix }}
+  aggregate-address {{ prefix }}
     {% endfor %}
   {% endif %}
   {% if networks %}
     {% for prefix in networks %}
-  network {{ prefix.prefix }}
+  network {{ prefix }}
     {% endfor %}
   {% endif %}
 {% endif %}
