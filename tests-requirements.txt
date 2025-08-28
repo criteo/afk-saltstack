@@ -10,10 +10,10 @@ pyflakes==2.4.0
 pytest
 pytest-benchmark
 pytest-mock
-salt==3004.2
+salt==3005.5
 tox
 
-# pin salt==3004.2 dependencies, as pip install salt does not install deps anymore
+# pin salt==3005.5 dependencies, as pip install salt does not install deps anymore
 certifi==2025.1.31
 charset-normalizer==3.4.1
 contextvars==2.4
