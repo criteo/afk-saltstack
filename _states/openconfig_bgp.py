@@ -23,6 +23,7 @@ SAFIS_ALIAS = {
     "sonic": {
         "IPV4_UNICAST": "ipv4 unicast",
         "IPV6_UNICAST": "ipv6 unicast",
+        "L2VPN_EVPN": "l2vpn evpn",
     },
     "junos": {
         "IPV4_UNICAST": "inet unicast",
@@ -34,6 +35,7 @@ SAFIS_ALIAS = {
 SAFI_MAPPING_OPENCONFIG = {
     "IPV4_UNICAST": "ipv4-unicast",
     "IPV6_UNICAST": "ipv6-unicast",
+    "L2VPN_EVPN": "l2vpn-evpn",
 }
 
 
