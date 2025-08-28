@@ -90,9 +90,9 @@ def _global_safi_to_dict(openconfig_global):
     # to: "ipv4-unicast": { "id": 1, "afi_safi_name": "ipv4-unicast", "aggregates": [ {...} ]... }
     global_safi_configs = {}
 
-    for _safi in openconfig_global.get("afi_safis", {}):
-        safi_name = _safi["afi_safi_name"]
-        if safi_name not in ["ipv4-unicast", "ipv6-unicast"]:
+    for _safi in openconfig_global.get("afi-safis", {}).get("afi-safi", []):
+        safi_name = _safi["afi-safi-name"]
+        if safi_name not in SAFI_MAPPING_OPENCONFIG:
             raise NotImplementedError("unknown SAFI {}".format(safi_name))
 
         global_safi_configs[safi_name] = _safi
