@@ -232,6 +232,7 @@ def _generate_neighbor_part(
         "result", {}
     )
     context = {
+        "version": __salt__["grains.get"]("version"),
         "neighbor": neighbor,
         "global_as": global_as,
         "vrf": default_vrf,  # TODO: add VRF support
