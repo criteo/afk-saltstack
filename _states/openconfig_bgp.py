@@ -231,7 +231,15 @@ def _generate_neighbor_part(
     current_bgp_config = __salt__["criteo_bgp.get_neighbors"](dict_per_address=True).get(
         "result", {}
     )
+
+    nos = _get_os()
+    timer_delayopen_supported = True
+    if nos == "sonic" and "201911" in __salt__["grains.get"]("sonic_build_version"):
+        # delayopen timer is disabled for 201911 as not supported by FRR version
+        timer_delayopen_supported = False
+
     context = {
+        "timer_delayopen_supported": timer_delayopen_supported,
         "neighbor": neighbor,
         "global_as": global_as,
         "vrf": default_vrf,  # TODO: add VRF support
