@@ -39,7 +39,7 @@ neighbor {{ neighbor["neighbor-address"] }} password {{ neighbor["config"]["auth
 no neighbor {{ neighbor["neighbor-address"] }} password
 {% endif %}
 
-{% if version and "201911" in version %}
+{% if timer_delayopen_supported %}
     {% if deep_get(neighbor, "timers", "config", "delay-open-timer") %}
 neighbor {{ neighbor["neighbor-address"] }} timers delayopen {{ neighbor["timers"]["config"]["delay-open-timer"] }}
     {% else %}

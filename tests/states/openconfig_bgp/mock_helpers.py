@@ -52,6 +52,9 @@ def _apply_common_mock(mocker, network_os):
         "jinja_filters.deep_get": STATE_UTIL.deep_get,
     }
 
+    if network_os == "sonic":
+        STATE_MOD.__salt__["grains.get"] = lambda name, *_: "202205" if name == "sonic_build_version" else None
+
 
 def salt_bgp_mock(network_os):
     def decorator(func):
