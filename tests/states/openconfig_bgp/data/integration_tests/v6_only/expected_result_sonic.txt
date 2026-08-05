@@ -1,3 +1,6 @@
+agentx
+log syslog informational
+log facility local4
 router bgp 65000
     !
     neighbor 2001:db8::101 remote-as 65001
