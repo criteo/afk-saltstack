@@ -1,3 +1,6 @@
+agentx
+log syslog informational
+log facility local4
 router bgp {{ global_as }}
     {{ global_configuration| indent(width=4, first=False) }}
 {% for peer_group in peer_groups %}
