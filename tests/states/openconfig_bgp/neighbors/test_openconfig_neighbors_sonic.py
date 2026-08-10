@@ -70,6 +70,14 @@ def test__generate_neighbor_part__minimal_ipv4_up(mocker):
             "no neighbor 192.0.2.1 soft-reconfiguration inbound\n"
             "no neighbor 192.0.2.1 send-community"
         ),
+        "L2VPN_EVPN": (
+            "no neighbor 192.0.2.1 route-map * in\n"
+            "no neighbor 192.0.2.1 route-map * out\n"
+            "no neighbor 192.0.2.1 maximum-prefix\n"
+            "no neighbor 192.0.2.1 activate\n"
+            "no neighbor 192.0.2.1 soft-reconfiguration inbound\n"
+            "no neighbor 192.0.2.1 send-community"
+        ),
     }
 
 
@@ -142,6 +150,14 @@ def test__generate_neighbor_part__minimal_ipv4_shutdown_different_local_as(mocke
             "no neighbor 192.0.2.1 soft-reconfiguration inbound\n"
             "no neighbor 192.0.2.1 send-community"
         ),
+        "L2VPN_EVPN": (
+            "no neighbor 192.0.2.1 route-map * in\n"
+            "no neighbor 192.0.2.1 route-map * out\n"
+            "no neighbor 192.0.2.1 maximum-prefix\n"
+            "no neighbor 192.0.2.1 activate\n"
+            "no neighbor 192.0.2.1 soft-reconfiguration inbound\n"
+            "no neighbor 192.0.2.1 send-community"
+        ),
     }
 
 
@@ -204,6 +220,14 @@ def test__generate_neighbor_part__minimal_ipv6(mocker):
             "no neighbor 2001:db8::1 send-community"
         ),
         "IPV6_UNICAST": (
+            "no neighbor 2001:db8::1 route-map * in\n"
+            "no neighbor 2001:db8::1 route-map * out\n"
+            "no neighbor 2001:db8::1 maximum-prefix\n"
+            "no neighbor 2001:db8::1 activate\n"
+            "no neighbor 2001:db8::1 soft-reconfiguration inbound\n"
+            "no neighbor 2001:db8::1 send-community"
+        ),
+        "L2VPN_EVPN": (
             "no neighbor 2001:db8::1 route-map * in\n"
             "no neighbor 2001:db8::1 route-map * out\n"
             "no neighbor 2001:db8::1 maximum-prefix\n"
@@ -289,6 +313,14 @@ def test__generate_neighbor_part__full(mocker):
             "neighbor 192.0.2.1 soft-reconfiguration inbound\n"
             "neighbor 192.0.2.1 send-community"
         ),
+        "L2VPN_EVPN": (
+            "no neighbor 192.0.2.1 route-map * in\n"
+            "no neighbor 192.0.2.1 route-map * out\n"
+            "no neighbor 192.0.2.1 maximum-prefix\n"
+            "no neighbor 192.0.2.1 activate\n"
+            "no neighbor 192.0.2.1 soft-reconfiguration inbound\n"
+            "no neighbor 192.0.2.1 send-community"
+        ),
     }
 
 
@@ -367,5 +399,13 @@ def test__generate_neighbor_part__delay_open_timer(mocker):
             "neighbor 192.0.2.1 activate\n"
             "neighbor 192.0.2.1 soft-reconfiguration inbound\n"
             "neighbor 192.0.2.1 send-community"
+        ),
+        "L2VPN_EVPN": (
+            "no neighbor 192.0.2.1 route-map * in\n"
+            "no neighbor 192.0.2.1 route-map * out\n"
+            "no neighbor 192.0.2.1 maximum-prefix\n"
+            "no neighbor 192.0.2.1 activate\n"
+            "no neighbor 192.0.2.1 soft-reconfiguration inbound\n"
+            "no neighbor 192.0.2.1 send-community"
         ),
     }

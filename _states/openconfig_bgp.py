@@ -210,6 +210,10 @@ def _generate_peer_group(peer_group, bgp_distance, saltenv):
     safis_config["IPV6_UNICAST"] = _generate_safi_part(
         "IPV6_UNICAST", safis.get("IPV6_UNICAST", {}), peer_group, SafiAssetType.PEER_GROUP, saltenv
     )
+    if "L2VPN_EVPN" in SAFIS_ALIAS[_get_os()]:
+        safis_config["L2VPN_EVPN"] = _generate_safi_part(
+            "L2VPN_EVPN", safis.get("L2VPN_EVPN", {}), peer_group, SafiAssetType.PEER_GROUP, saltenv
+        )
 
     peer_group_config = _generate_peer_group_part(
         peer_group, prefix_limit_config, bgp_distance, saltenv
@@ -351,6 +355,10 @@ def _generate_neighbor_config(neighbor, global_as, bgp_distance, peer_groups, sa
     safis_config["IPV6_UNICAST"] = _generate_safi_part(
         "IPV6_UNICAST", safis.get("IPV6_UNICAST", {}), neighbor, SafiAssetType.NEIGHBOR, saltenv
     )
+    if "L2VPN_EVPN" in SAFIS_ALIAS[_get_os()]:
+        safis_config["L2VPN_EVPN"] = _generate_safi_part(
+            "L2VPN_EVPN", safis.get("L2VPN_EVPN", {}), neighbor, SafiAssetType.NEIGHBOR, saltenv
+        )
 
     return (neighbor_config, safis_config)
 

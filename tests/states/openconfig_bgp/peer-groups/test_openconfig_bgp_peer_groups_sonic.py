@@ -38,6 +38,12 @@ def test__generate_peer_group_part__minimal(mocker):
             "neighbor RA02.01:PG-TOR send-community"
 
         ),
+        "L2VPN_EVPN": (
+            "no neighbor RA02.01:PG-TOR route-map * in\n"
+            "no neighbor RA02.01:PG-TOR route-map * out\n"
+            "no neighbor RA02.01:PG-TOR maximum-prefix\n"
+            "neighbor RA02.01:PG-TOR send-community"
+        ),
     }
 
 
@@ -69,6 +75,12 @@ def test__generate_peer_group_part__simple(mocker):
             "neighbor RA02.01:PG-TOR send-community"
         ),
         "IPV6_UNICAST": (
+            "neighbor RA02.01:PG-TOR route-map RM-LAN-IN in\n"
+            "neighbor RA02.01:PG-TOR route-map RM-LAN-OUT out\n"
+            "no neighbor RA02.01:PG-TOR maximum-prefix\n"
+            "neighbor RA02.01:PG-TOR send-community"
+        ),
+        "L2VPN_EVPN": (
             "neighbor RA02.01:PG-TOR route-map RM-LAN-IN in\n"
             "neighbor RA02.01:PG-TOR route-map RM-LAN-OUT out\n"
             "no neighbor RA02.01:PG-TOR maximum-prefix\n"
@@ -113,6 +125,12 @@ def test__generate_peer_group_part_with_safi(mocker):
             "neighbor RA02.01:PG-TOR send-community"
         ),
         "IPV6_UNICAST": (
+            "neighbor RA02.01:PG-TOR route-map RM-LAN-IN in\n"
+            "neighbor RA02.01:PG-TOR route-map RM-LAN-OUT out\n"
+            "no neighbor RA02.01:PG-TOR maximum-prefix\n"
+            "neighbor RA02.01:PG-TOR send-community"
+        ),
+        "L2VPN_EVPN": (
             "neighbor RA02.01:PG-TOR route-map RM-LAN-IN in\n"
             "neighbor RA02.01:PG-TOR route-map RM-LAN-OUT out\n"
             "no neighbor RA02.01:PG-TOR maximum-prefix\n"

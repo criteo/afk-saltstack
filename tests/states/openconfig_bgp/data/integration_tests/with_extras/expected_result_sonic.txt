@@ -87,3 +87,30 @@ router bgp 65000
         neighbor 2001:db8::102 soft-reconfiguration inbound
         neighbor 2001:db8::102 send-community
     exit-address-family
+    !
+    address-family l2vpn evpn
+        no neighbor 192.0.2.1 route-map * in
+        no neighbor 192.0.2.1 route-map * out
+        no neighbor 192.0.2.1 maximum-prefix
+        no neighbor 192.0.2.1 activate
+        no neighbor 192.0.2.1 soft-reconfiguration inbound
+        no neighbor 192.0.2.1 send-community
+        no neighbor 192.0.2.2 route-map * in
+        no neighbor 192.0.2.2 route-map * out
+        no neighbor 192.0.2.2 maximum-prefix
+        no neighbor 192.0.2.2 activate
+        no neighbor 192.0.2.2 soft-reconfiguration inbound
+        no neighbor 192.0.2.2 send-community
+        no neighbor 2001:db8::101 route-map * in
+        no neighbor 2001:db8::101 route-map * out
+        no neighbor 2001:db8::101 maximum-prefix
+        no neighbor 2001:db8::101 activate
+        no neighbor 2001:db8::101 soft-reconfiguration inbound
+        no neighbor 2001:db8::101 send-community
+        no neighbor 2001:db8::102 route-map * in
+        no neighbor 2001:db8::102 route-map * out
+        no neighbor 2001:db8::102 maximum-prefix
+        no neighbor 2001:db8::102 activate
+        no neighbor 2001:db8::102 soft-reconfiguration inbound
+        no neighbor 2001:db8::102 send-community
+    exit-address-family
